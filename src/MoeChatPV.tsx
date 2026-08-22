@@ -6,7 +6,6 @@ import { fade } from '@remotion/transitions/fade'
 import { slide } from '@remotion/transitions/slide'
 import { wipe } from '@remotion/transitions/wipe'
 import { SubtitleLayer } from './subtitles'
-import { ProgressBar } from './ui'
 import { SceneBackground } from './fx'
 import { Opening } from './scenes/Opening'
 import { Live2DCharacterShowcase, SHOWCASE_DURATION } from './scenes/Live2DCharacterShowcase'
@@ -176,7 +175,6 @@ export const MoeChatPV: React.FC = () => {
       </TransitionSeries>
       {/* 始终覆盖在所有场景上：字幕与全片进度条。 */}
       <SubtitleLayer />
-      <ProgressBar totalFrames={durationInFrames} />
     </AbsoluteFill>
   )
 }

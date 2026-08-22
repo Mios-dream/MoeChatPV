@@ -211,37 +211,26 @@ export const Live2DFeatureShowcase: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          right: -300,
-          top: 10,
-          width: 1200,
-          height: 1200,
+          right: -500,
+          top: 0,
+          width: 1800,
+          height: 1800,
           transform: `translateY(${Math.sin(timelineFrame * 0.045) * 7}px)`,
           opacity: featureP
         }}
       >
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-          <Sequence from={0} durationInFrames={FEATURE_VOICE_DURATION}>
-            <Video
-              src={staticFile('live2d-generated/feature-chat/character.webm')}
-              muted
-              style={{
-                width: 1200,
-                height: 1200,
-                objectFit: 'contain',
-                rotate: '-0.2deg'
-              }}
-            />
-            <Audio volume={1.3} src={staticFile('live2d-generated/feature-chat/voice.wav')} />
-          </Sequence>
-          <Sequence from={FEATURE_VOICE_DURATION}>
+        <Sequence from={0} durationInFrames={FEATURE_VOICE_DURATION}>
+          <Video src={staticFile('live2d-generated/feature-chat/character.webm')} muted />
+          <Audio volume={1.3} src={staticFile('live2d-generated/feature-chat/voice.wav')} />
+        </Sequence>
+        {/* <Sequence from={FEATURE_VOICE_DURATION}>
             <Video
               src={staticFile('live2d-generated/hero-idle/character.webm')}
               loop
               muted
               style={{ width: 1200, height: 1200, objectFit: 'contain' }}
             />
-          </Sequence>
-        </div>
+          </Sequence> */}
       </div>
     </AbsoluteFill>
   )
