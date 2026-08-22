@@ -41,6 +41,14 @@ type PortraitShotProps = {
   imageY: number
   imageScale: number
   imageX?: number
+  settleTo?: {
+    imageX: number
+    imageY: number
+    imageScale: number
+    end: number
+    fadeOutStart: number
+    fadeOutEnd: number
+  }
 }
 
 const PortraitShot: React.FC<PortraitShotProps> = ({
@@ -48,7 +56,8 @@ const PortraitShot: React.FC<PortraitShotProps> = ({
   to,
   imageY,
   imageScale,
-  imageX = 0
+  imageX = 0,
+  settleTo
 }) => {
   const frame = useCurrentFrame()
   const duration = to - from
@@ -58,17 +67,35 @@ const PortraitShot: React.FC<PortraitShotProps> = ({
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
-  const fadeOut = interpolate(local, [duration - 14, duration], [1, 0], {
-    easing: Easing.in(Easing.cubic),
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp'
-  })
-  const opacity = Math.min(fadeIn, fadeOut)
+  const fadeOutOpacity = settleTo
+    ? interpolate(local, [settleTo.fadeOutStart, settleTo.fadeOutEnd], [1, 0], {
+        easing: Easing.in(Easing.cubic),
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp'
+      })
+    : interpolate(local, [duration - 14, duration], [1, 0], {
+        easing: Easing.in(Easing.cubic),
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp'
+      })
+  const opacity = Math.min(fadeIn, fadeOutOpacity)
   const camera = interpolate(local, [0, duration], [0.98, 1.05], {
     easing: Easing.bezier(0.16, 1, 0.3, 1),
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
+  const settleP = settleTo
+    ? interpolate(local, [duration, settleTo.end], [0, 1], {
+        easing: Easing.bezier(0.16, 1, 0.3, 1),
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp'
+      })
+    : 0
+  const settledImageScale = settleTo
+    ? interpolate(settleP, [0, 1], [imageScale * camera, settleTo.imageScale])
+    : imageScale * camera
+  const settledImageX = settleTo ? interpolate(settleP, [0, 1], [imageX, settleTo.imageX]) : imageX
+  const settledImageY = settleTo ? interpolate(settleP, [0, 1], [imageY, settleTo.imageY]) : imageY
   return (
     <div
       style={{
@@ -82,28 +109,11 @@ const PortraitShot: React.FC<PortraitShotProps> = ({
       <div
         style={{
           position: 'absolute',
-          inset: 0
-          // background:
-          //   'radial-gradient(circle at 70% 48%, rgba(255,255,255,0.18), transparent 34%), linear-gradient(132deg, #171525 0%, #2c233c 47%, #72536e 100%)'
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          opacity: 0.24
-          // background:
-          //   'repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 46px)'
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
           left: '50%',
           top: '50%',
           width: 1120,
           height: 1680,
-          transform: `translate(calc(-50% + ${imageX}px), calc(-50% + ${imageY}px)) scale(${imageScale * camera})`,
+          transform: `translate(calc(-50% + ${settledImageX}px), calc(-50% + ${settledImageY}px)) scale(${settledImageScale})`,
           transformOrigin: 'center center',
           zIndex: 1
         }}
@@ -119,18 +129,12 @@ const PortraitShot: React.FC<PortraitShotProps> = ({
 
 const CharacterIntro: React.FC = () => {
   const frame = useCurrentFrame()
-  const introP = interpolate(frame, [0, 30], [0, 1], {
-    easing: Easing.bezier(0.16, 1, 0.3, 1),
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp'
-  })
-  const introOut = interpolate(frame, [96, 118], [1, 0], {
+  const outroP = interpolate(frame, [120, 132], [1, 0], {
     easing: Easing.in(Easing.cubic),
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
-  const opacity = Math.min(introP, introOut)
-  const imageY = interpolate(frame, [0, 118], [28, -12], {
+  const nameP = interpolate(frame, [30, 200], [0, 1], {
     easing: Easing.bezier(0.16, 1, 0.3, 1),
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
@@ -142,56 +146,50 @@ const CharacterIntro: React.FC = () => {
         position: 'absolute',
         inset: 0,
         overflow: 'hidden',
-        opacity
+        opacity: outroP
       }}
     >
       <div
         style={{
           position: 'absolute',
-          inset: 0,
-          opacity: 0.2
-          // background:
-          //   'repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 2px, transparent 2px 46px)'
-        }}
-      />
-
-      <div
-        style={{
-          position: 'absolute',
           left: 200,
-          top: 500,
-          width: 700,
+          top: 400,
+          width: 900,
           zIndex: 3,
-          opacity,
-          transform: `translateY(${(1 - introP) * 28}px)`
+          opacity: nameP,
+          transform: `translateY(${(1 - nameP) * 28}px)`
         }}
       >
         <div
           style={{
             marginTop: 24,
             fontFamily: FONT.kaTong,
-            fontSize: 170,
+            fontSize: 200,
             lineHeight: 1,
             color: '#FFA8C5',
-            // transform: 'rotate(20deg)',
+
             textShadow: '10px 10px 5px rgba(255,255,255,1)'
           }}
         >
           香风智乃
         </div>
-        {/* <div
+        <div
           style={{
-            marginTop: 28,
-            width: 560,
-            fontFamily: FONT.sanJi,
-            fontSize: 34,
-            lineHeight: 1.5,
-            color: 'rgba(255,255,255,0.94)',
-            fontWeight: 700
+            marginTop: -20,
+            marginLeft: 450,
+            width: 300,
+            height: 120,
+            background: '#A7467C',
+            color: '#fff',
+            fontSize: 60,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: FONT.sanJi
           }}
         >
-          温柔又可靠的桌面伙伴
-        </div> */}
+          内置助手
+        </div>
         {/* <div
           style={{
             marginTop: 20,
@@ -205,31 +203,52 @@ const CharacterIntro: React.FC = () => {
           她会陪你聊天、记录心情，也会用声音和表情回应每一次互动。
         </div> */}
       </div>
-      <div
-        style={{
-          position: 'absolute',
-          right: 100,
-          top: 88,
-          width: 1500,
-          height: 'auto',
-          zIndex: 2,
-          transform: `translateY(${imageY}px)`,
-          filter: 'drop-shadow(0 28px 34px rgba(250,250,250,0.9))'
-        }}
-      >
-        <Img
-          src={staticFile('images/智乃立绘.png')}
+    </div>
+  )
+}
+
+type FlowerProps = {
+  left: number
+  top: number
+  size: number
+  opacity: number
+  offset: number
+}
+
+const Flower: React.FC<FlowerProps> = ({ left, top, size, opacity, offset }) => {
+  const frame = useCurrentFrame()
+  const petalWidth = size * 0.52
+  const petalHeight = size * 0.38
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left,
+        top,
+        width: size,
+        height: size,
+        opacity,
+        transform: `translate(-50%, -50%) rotate(${offset + frame * 5}deg)`,
+        transformOrigin: 'center center'
+      }}
+    >
+      {Array.from({ length: 5 }, (_, index) => (
+        <div
+          key={index}
           style={{
             position: 'absolute',
-            left: 0,
-            top: -24,
-            width: '100%',
-            height: 'auto',
-            objectFit: 'fill'
+            left: '50%',
+            top: '50%',
+            width: petalWidth,
+            height: petalHeight,
+            background: '#f6a7bf',
+            borderRadius: '50%',
+            transform: `translateY(-50%) rotate(${index * 72}deg)`,
+            transformOrigin: '0 50%'
           }}
         />
-      </div>
-      <Audio src={staticFile('live2d-generated/greeting/voice.wav')} volume={0.96} />
+      ))}
     </div>
   )
 }
@@ -237,57 +256,65 @@ const CharacterIntro: React.FC = () => {
 const CharacterShowcase: React.FC = () => {
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
+      <AbsoluteFill style={{ pointerEvents: 'none', overflow: 'hidden' }}>
+        <div
+          style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 90,
+            width: '100%',
+            background: '#fca5b9',
+            position: 'absolute'
+          }}
+        />
+        <div
+          style={{
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 90,
+            width: '100%',
+            background: '#fca5b9',
+            position: 'absolute'
+          }}
+        />
+        <Flower left={170} top={210} size={118} opacity={0.58} offset={12} />
+        <Flower left={1770} top={210} size={82} opacity={0.5} offset={72} />
+        <Flower left={170} top={870} size={76} opacity={0.48} offset={210} />
+        <Flower left={1740} top={850} size={142} opacity={0.56} offset={148} />
+      </AbsoluteFill>
       <PortraitShot from={0} to={66} imageY={-1000} imageScale={2} />
       <PortraitShot from={54} to={130} imageY={0} imageX={-200} imageScale={2} />
-      <PortraitShot from={118} to={196} imageY={1200} imageX={-200} imageScale={2} />
-      <Sequence from={190} durationInFrames={SHOWCASE_DURATION - 190} premountFor={12}>
+      <PortraitShot
+        from={118}
+        to={196}
+        imageY={1200}
+        imageX={-200}
+        imageScale={2}
+        settleTo={{
+          imageX: 300,
+          imageY: 700,
+          imageScale: 1.5,
+          end: 136,
+          fadeOutStart: 170,
+          fadeOutEnd: 190
+        }}
+      />
+      <Sequence from={160} durationInFrames={SHOWCASE_DURATION - 190} premountFor={12}>
+        <Audio src={staticFile('live2d-generated/greeting/voice.wav')} volume={0.96} from={1} />
+      </Sequence>
+      <Sequence from={170} durationInFrames={SHOWCASE_DURATION - 170} premountFor={12}>
         <CharacterIntro />
       </Sequence>
     </AbsoluteFill>
   )
 }
 
-const DialogueBubble: React.FC<{
-  children: React.ReactNode
-  opacity: number
-  accent?: string
-}> = ({ children, opacity, accent = COLORS.pinkDark }) => (
-  <div
-    style={{
-      padding: '20px 32px',
-      borderRadius: 28,
-      borderTopRightRadius: 10,
-      background: 'rgba(255,255,255,0.96)',
-      border: `2.5px solid ${COLORS.pinkPale}`,
-      boxShadow: `0 18px 44px -16px ${COLORS.pinkShadow}`,
-      fontFamily: FONT.sanJi,
-      fontSize: 31,
-      fontWeight: 700,
-      color: COLORS.textDark,
-      lineHeight: 1.45,
-      opacity
-    }}
-  >
-    {children}
-    <span style={{ color: accent }}>。</span>
-  </div>
-)
-
 export const Live2DHero: React.FC = () => {
   const frame = useCurrentFrame()
   const featureP = usePop(frame, FEATURE_START, 34)
-  const featureVoiceP = Math.min(
-    useFade(frame, FEATURE_START + 22, 24),
-    interpolate(
-      frame,
-      [FEATURE_START + FEATURE_VOICE_DURATION - 34, FEATURE_START + FEATURE_VOICE_DURATION],
-      [1, 0],
-      {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp'
-      }
-    )
-  )
+
   const activeTab =
     frame < FEATURE_START + TABS[1].start
       ? 0
@@ -302,8 +329,11 @@ export const Live2DHero: React.FC = () => {
     <AbsoluteFill>
       <SceneBackground
         from="#fffafc"
-        via="#ffe9f0"
-        to="#ffd0df"
+        via="#fffafc"
+        to="#fffafc"
+        // from="#fffafc"
+        // via="#ffe9f0"
+        // to="#ffd0df"
         hearts={false}
         sparkleSeed={61}
         blobs={false}
@@ -314,7 +344,7 @@ export const Live2DHero: React.FC = () => {
         style={{
           opacity: frame < FEATURE_START ? 0.68 : 0.18,
           background:
-            'repeating-linear-gradient(135deg, rgba(255,152,180,0.24) 0 18px, transparent 18px 54px)'
+            'repeating-linear-gradient(135deg, rgba(255,152,180,0.24) 0 50px, transparent 50px 100px)'
         }}
       />
       {/* Character showcase: three portrait details, then an enlarged Live2D expression shot. */}
@@ -525,7 +555,7 @@ export const Live2DHero: React.FC = () => {
                   rotate: '-0.2deg'
                 }}
               />
-              <Audio src={staticFile('live2d-generated/feature-chat/voice.wav')} volume={0.9} />
+              <Audio volume={1.3} src={staticFile('live2d-generated/feature-chat/voice.wav')} />
             </Sequence>
             <Sequence from={FEATURE_VOICE_DURATION}>
               <Video
@@ -535,20 +565,6 @@ export const Live2DHero: React.FC = () => {
                 style={{ width: 1200, height: 1200, objectFit: 'contain' }}
               />
             </Sequence>
-          </div>
-          <div
-            style={{
-              position: 'absolute',
-              left: -55,
-              top: -106,
-              width: 610,
-              opacity: featureVoiceP,
-              transform: `translateY(${(1 - featureVoiceP) * 15}px)`
-            }}
-          >
-            <DialogueBubble opacity={1} accent={COLORS.purple}>
-              想聊天、查天气，还是记下今天的心情？告诉我吧
-            </DialogueBubble>
           </div>
         </div>
       </Sequence>

@@ -321,6 +321,22 @@ export const FloatingHearts: React.FC<{
   )
 }
 
+/**
+ * 场景背景
+ * @param from 渐变起始颜色
+ * @param via 渐变中间颜色
+ * @param to 渐变结束颜色
+ * @param petals 是否显示樱花花瓣
+ * @param sparkles 是否显示闪光
+ * @param blobs 是否显示漂浮的彩色圆点
+ * @param hearts 是否显示漂浮的爱心
+ * @param ribbons 是否显示底部飘带
+ * @param petalSeed 花瓣随机种子
+ * @param sparkleSeed 闪光随机种子
+ * @param blobSeed 漂浮圆点随机种子
+ * @param petalTint 花瓣颜色
+ * @returns
+ */
 export const SceneBackground: React.FC<{
   from?: string
   via?: string

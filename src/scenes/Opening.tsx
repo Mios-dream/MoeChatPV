@@ -17,27 +17,39 @@ const SakuraFlower: React.FC<{
   size: number
   x: number
   y: number
-  speed?: number
-}> = ({ size, x, y, speed = 1 }) => {
+  angle?: number
+}> = ({ size, x, y, angle = 0 }) => {
   const frame = useCurrentFrame()
-  const rot = frame * 0.045 * speed
-  const pulse = 1 + 0.06 * Math.sin(frame * 0.08 * speed)
+  const petalWidth = size * 0.52
+  const petalHeight = size * 0.38
+
   return (
     <div
       style={{
         position: 'absolute',
         left: x,
         top: y,
-        transform: `translate(-50%, -50%) rotate(${rot}rad) scale(${pulse})`
+        width: size,
+        height: size,
+        transform: `translate(-50%, -50%) rotate(${angle + frame * 5}deg)`
       }}
     >
-      <svg width={size} height={size} viewBox="-60 -60 120 120">
-        <path
-          d="M0,-43 C13,-59 36,-48 34,-29 C54,-31 63,-8 47,4 C62,20 49,43 30,37 C25,57 1,60 -8,43 C-24,59 -47,47 -43,28 C-63,28 -67,4 -49,-7 C-61,-24 -44,-45 -27,-37 C-21,-55 -6,-59 0,-43 Z"
-          fill={COLORS.pink}
-          opacity={0.82}
+      {Array.from({ length: 5 }, (_, index) => (
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            width: petalWidth,
+            height: petalHeight,
+            background: COLORS.pink,
+            borderRadius: '50%',
+            transform: `translateY(-50%) rotate(${index * 72}deg)`,
+            transformOrigin: '0 50%'
+          }}
         />
-      </svg>
+      ))}
     </div>
   )
 }
@@ -94,10 +106,10 @@ export const Opening: React.FC = () => {
       <Sequence from={QUOTE_START} durationInFrames={QUOTE_DURATION}>
         <Audio volume={0.5} src={staticFile('audio/所以，阁下一定不要放弃自己的梦想啊！.wav')} />
       </Sequence>
-      <SakuraFlower size={76} x={235} y={388} speed={0.8} />
-      <SakuraFlower size={48} x={330} y={430} speed={1.1} />
-      <SakuraFlower size={66} x={1665} y={674} speed={0.9} />
-      <SakuraFlower size={42} x={1582} y={710} speed={1.2} />
+      <SakuraFlower size={76} x={235} y={388} angle={12} />
+      <SakuraFlower size={48} x={330} y={430} angle={72} />
+      <SakuraFlower size={66} x={1665} y={674} angle={42} />
+      <SakuraFlower size={42} x={1582} y={710} angle={102} />
       {/* Stage 1: dialogue */}
       <AbsoluteFill
         style={{
