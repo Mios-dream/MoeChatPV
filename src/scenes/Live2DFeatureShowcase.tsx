@@ -10,10 +10,20 @@ export const FEATURE_START = 320
 const FEATURE_VOICE_DURATION = 368
 
 const TABS = [
-  { icon: ICONS.comments, label: '聊天', start: 0 },
-  { icon: ICONS.listCheck, label: '待办', start: 108 },
-  { icon: ICONS.cloudSun, label: '天气', start: 216 },
-  { icon: ICONS.book, label: '日记', start: 324 }
+  { icon: ICONS.comments, label: '聊天', start: 0, caption: '无论何时，智乃都会陪伴着阁下' },
+  {
+    icon: ICONS.listCheck,
+    label: '待办',
+    start: 108,
+    caption: '记录下自己的待办事项，智乃会监督你完成'
+  },
+  { icon: ICONS.cloudSun, label: '天气', start: 216, caption: '出门前，让智乃帮你看看天气吧' },
+  {
+    icon: ICONS.book,
+    label: '日记',
+    start: 324,
+    caption: '智乃也会有独属于自己的日记，才不会让阁下偷看呢'
+  }
 ]
 
 const TAB_VIDEOS = [
@@ -63,7 +73,6 @@ export const Live2DFeatureShowcase: React.FC = () => {
           她住进桌面以后
         </div>
       </div>
-
       <div
         style={{
           position: 'absolute',
@@ -74,13 +83,13 @@ export const Live2DFeatureShowcase: React.FC = () => {
           transformOrigin: 'left top'
         }}
       >
-        <WindowFrame width={1300} height={760} title="智乃的桌面" popDelay={12}>
+        <WindowFrame width={1300} height={850} title="桌面演示" popDelay={12}>
           <div
             style={{
-              position: 'absolute',
-              inset: 0,
               display: 'flex',
               flexDirection: 'column',
+              width: '100%',
+              height: '100%',
               background: '#fff'
             }}
           >
@@ -88,7 +97,7 @@ export const Live2DFeatureShowcase: React.FC = () => {
               style={{
                 display: 'flex',
                 gap: 14,
-                padding: '16px 22px',
+                padding: '14px 22px',
                 borderBottom: `1.5px solid ${COLORS.pinkPale}`,
                 background: '#fff8fa',
                 flexShrink: 0
@@ -103,7 +112,7 @@ export const Live2DFeatureShowcase: React.FC = () => {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 9,
-                      padding: '11px 22px',
+                      padding: '10px 22px',
                       borderRadius: 999,
                       fontFamily: FONT.sanJi,
                       fontSize: 24,
@@ -122,12 +131,12 @@ export const Live2DFeatureShowcase: React.FC = () => {
                 )
               })}
             </div>
-            <div style={{ position: 'relative', flex: 1 }}>
+            <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
               {TAB_VIDEOS.map((src, i) => {
                 const start = TABS[i].start
                 const duration = i === TABS.length - 1 ? 120 : 108
                 return (
-                  <Sequence key={i} from={start} durationInFrames={duration}>
+                  <Sequence key={src} from={start} durationInFrames={duration}>
                     <Video
                       src={staticFile(src)}
                       muted
@@ -136,7 +145,8 @@ export const Live2DFeatureShowcase: React.FC = () => {
                         inset: 0,
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
+                        objectPosition: 'center center'
                       }}
                     />
                   </Sequence>
@@ -162,59 +172,19 @@ export const Live2DFeatureShowcase: React.FC = () => {
                 }}
               >
                 <Icon icon={TABS[activeTab].icon} size={22} color={COLORS.pinkDark} />
-                {TABS[activeTab].label === '聊天'
-                  ? '开口就有回应，表情也会动'
-                  : TABS[activeTab].label === '待办'
-                  ? '说一声，智乃替你记下来'
-                    : TABS[activeTab].label === '天气'
-                      ? '抬头之前，天气已经查好'
-                      : '今天的事，留给明天再翻开'}
+                {TABS[activeTab].caption}
               </div>
             </div>
           </div>
         </WindowFrame>
-        <div
-          style={{
-            display: 'flex',
-            gap: 14,
-            marginTop: 18,
-            justifyContent: 'center'
-          }}
-        >
-          <FeatureChip
-            label="开口就有回应"
-            icon={<Icon icon={ICONS.micLines} size={22} color={COLORS.pink} />}
-            delay={42}
-            size={21}
-          />
-          <FeatureChip
-            label="情绪会动"
-            icon={<Icon icon={ICONS.masks} size={22} color={COLORS.pink} />}
-            delay={56}
-            size={21}
-          />
-          <FeatureChip
-            label="桌边小事"
-            icon={<Icon icon={ICONS.clock} size={22} color={COLORS.pink} />}
-            delay={70}
-            size={21}
-          />
-          <FeatureChip
-            label="安静待机"
-            icon={<Icon icon={ICONS.battery} size={22} color={COLORS.pink} />}
-            delay={84}
-            size={21}
-          />
-        </div>
       </div>
-
       <div
         style={{
           position: 'absolute',
-          right: -500,
+          right: -400,
           top: 0,
-          width: 1800,
-          height: 1800,
+          width: 1500,
+          height: 1500,
           transform: `translateY(${Math.sin(timelineFrame * 0.045) * 7}px)`,
           opacity: featureP
         }}
@@ -223,14 +193,6 @@ export const Live2DFeatureShowcase: React.FC = () => {
           <Video src={staticFile('live2d-generated/feature-chat/character.webm')} muted />
           <Audio volume={1.3} src={staticFile('live2d-generated/feature-chat/voice.wav')} />
         </Sequence>
-        {/* <Sequence from={FEATURE_VOICE_DURATION}>
-            <Video
-              src={staticFile('live2d-generated/hero-idle/character.webm')}
-              loop
-              muted
-              style={{ width: 1200, height: 1200, objectFit: 'contain' }}
-            />
-          </Sequence> */}
       </div>
     </AbsoluteFill>
   )

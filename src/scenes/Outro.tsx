@@ -8,7 +8,6 @@ import { Icon, ICONS } from '../icons'
 
 export const Outro: React.FC = () => {
   const frame = useCurrentFrame()
-  const subP = usePop(frame, 100)
   const cardP = usePop(frame, 140)
   const chipsP = usePop(frame, 185)
   const biliP = usePop(frame, 225)
@@ -42,24 +41,13 @@ export const Outro: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          top: 265,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 14,
-          opacity: subP,
-          transform: `translateY(${(1 - subP) * 22}px)`,
-          fontFamily: FONT.sanJi,
-          fontSize: 34,
-          fontWeight: 600,
-          color: COLORS.textDark
+          left: '50%',
+          top: 330,
+          transform: 'translateX(-50%)'
         }}
       >
-        <Icon icon={ICONS.heart} size={36} color={COLORS.pinkDark} />
-        她会记得你，也会等你回来
+        <Mascot size={200} delay={70} mood="happy" />
       </div>
-
       <div
         style={{
           position: 'absolute',
@@ -153,17 +141,6 @@ export const Outro: React.FC = () => {
           <Icon icon={ICONS.thumbsUp} size={28} color={COLORS.pink} />
           B站一键三连，支持我们继续发电～
         </div>
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 330,
-          transform: 'translateX(-50%)'
-        }}
-      >
-        <Mascot size={200} delay={70} mood="happy" />
       </div>
 
       <AbsoluteFill
