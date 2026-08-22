@@ -22,7 +22,7 @@ const SCENARIOS = [
   {
     icon: ICONS.gift as IconDefinition,
     title: '节日祝福',
-    text: '节日快乐，澪酱的祝福请查收！',
+    text: '节日快乐，智乃的祝福请查收！',
     color: COLORS.pinkDark
   },
   {
@@ -47,10 +47,10 @@ export const ScenesScene: React.FC = () => {
       <SceneBackground from="#fffdfe" via="#fff0f6" to="#ffd8e5" sparkleSeed={9} />
       <SceneTitle
         delay={8}
-        sub="吐槽 · 问候 · 祝福 · 陪伴，全都懂"
+        sub="早安、吐槽、祝福，换个时间也认得你"
         icon={<Icon icon={ICONS.moon} size={54} color={COLORS.purple} />}
       >
-        不止是聊天，更是生活搭子
+        从早安到晚安，她一直在这儿
       </SceneTitle>
 
       <div

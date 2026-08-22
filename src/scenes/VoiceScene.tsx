@@ -41,42 +41,6 @@ const WaveBars: React.FC<{ bars?: number; color?: string; speed?: number }> = ({
   )
 }
 
-const MoodChip: React.FC<{
-  icon: React.ReactNode
-  label: string
-  index: number
-}> = ({ icon, label, index }) => {
-  const frame = useCurrentFrame()
-  const cycle = (frame * 0.12 + index) % 3
-  const active = cycle < 1
-  const p = usePop(frame, 120 + index * 14)
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '13px 22px',
-        borderRadius: 999,
-        background: active
-          ? `linear-gradient(135deg, ${COLORS.pink}, ${COLORS.pinkDark})`
-          : 'rgba(255,255,255,0.9)',
-        border: `2px solid ${active ? 'transparent' : COLORS.pinkPale}`,
-        color: active ? COLORS.white : COLORS.textDark,
-        fontFamily: FONT.sanJi,
-        fontSize: 23,
-        fontWeight: 700,
-        boxShadow: active ? `0 10px 24px -8px ${COLORS.pinkShadow}` : 'none',
-        opacity: p,
-        transform: `translateY(${(1 - p) * 18}px)`
-      }}
-    >
-      {icon}
-      {label}
-    </div>
-  )
-}
-
 export const VoiceScene: React.FC = () => {
   const frame = useCurrentFrame()
   const recText = usePop(frame, 130)
@@ -86,10 +50,10 @@ export const VoiceScene: React.FC = () => {
       <SceneBackground from="#fffdfe" via="#fff1f6" to="#ffd9e6" sparkleSeed={77} />
       <SceneTitle
         delay={10}
-        sub="识别 → 理解 → 回应，一气呵成"
+        sub="你开口，她把这件事接过去"
         icon={<Icon icon={ICONS.micLines} size={54} color={COLORS.pinkDark} />}
       >
-        能听会说的智能语音
+        一句话，智乃就记住了
       </SceneTitle>
 
       <div
@@ -117,7 +81,7 @@ export const VoiceScene: React.FC = () => {
               marginBottom: 14
             }}
           >
-            实时语音识别
+            你说，她听见
           </div>
           <WaveBars bars={22} />
           <div
@@ -133,7 +97,7 @@ export const VoiceScene: React.FC = () => {
               transform: `translateY(${(1 - recText) * 16}px)`
             }}
           >
-            “今天想吃火锅…”
+            “周六下午三点，提醒我吃火锅。”
             <span style={{ color: COLORS.pinkDark, fontWeight: 700 }}>
               <Icon icon={ICONS.check} size={22} color={COLORS.mint} /> 已识别
             </span>
@@ -150,7 +114,7 @@ export const VoiceScene: React.FC = () => {
               marginBottom: 14
             }}
           >
-            自然语音合成
+            她回你一句
           </div>
           <WaveBars bars={22} color={COLORS.purple} speed={0.45} />
           <div
@@ -166,13 +130,13 @@ export const VoiceScene: React.FC = () => {
               transform: `translateY(${(1 - ttsText) * 16}px)`
             }}
           >
-            <Icon icon={ICONS.volume} size={24} color={COLORS.purple} /> 澪酱：
-            <strong style={{ color: COLORS.purple }}>“好呀，晚上就吃火锅～”</strong>
+            <Icon icon={ICONS.volume} size={24} color={COLORS.purple} /> 智乃：
+            <strong style={{ color: COLORS.purple }}>“记好啦，到时间叫你～”</strong>
           </div>
         </RoundedCard>
 
         <RoundedCard width={470} height={480} delay={100} pad={30}>
-          <Icon icon={ICONS.masks} size={64} color={COLORS.pinkDark} style={{ marginBottom: 8 }} />
+          <Icon icon={ICONS.listCheck} size={64} color={COLORS.pinkDark} style={{ marginBottom: 8 }} />
           <div
             style={{
               fontFamily: FONT.kaTong,
@@ -181,36 +145,54 @@ export const VoiceScene: React.FC = () => {
               marginBottom: 18
             }}
           >
-            表情动作自动生成
+            然后，她替你记下
           </div>
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              gap: 14,
-              alignItems: 'center'
+              width: '100%',
+              padding: '18px 20px',
+              borderRadius: 16,
+              background: '#fff0f5',
+              gap: 12,
+              flexDirection: 'column'
             }}
           >
-            <MoodChip
-              icon={<Icon icon={ICONS.smile} size={28} color={COLORS.pinkDark} />}
-              label="开心"
-              index={0}
-            />
-            <MoodChip
-              icon={<Icon icon={ICONS.flushed} size={28} color={COLORS.pinkDark} />}
-              label="害羞"
-              index={1}
-            />
-            <MoodChip
-              icon={<Icon icon={ICONS.frown} size={28} color={COLORS.pinkDark} />}
-              label="委屈"
-              index={2}
-            />
-            <MoodChip
-              icon={<Icon icon={ICONS.bolt} size={28} color={COLORS.pinkDark} />}
-              label="元气"
-              index={3}
-            />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontFamily: FONT.sanJi,
+                fontSize: 22,
+                color: COLORS.textGray
+              }}
+            >
+              <span>周六</span>
+              <span>15:00</span>
+            </div>
+            <div
+              style={{
+                fontFamily: FONT.sanJi,
+                fontSize: 28,
+                fontWeight: 700,
+                color: COLORS.textDark
+              }}
+            >
+              和朋友吃火锅
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                fontFamily: FONT.sanJi,
+                fontSize: 22,
+                fontWeight: 700,
+                color: COLORS.mint
+              }}
+            >
+              <Icon icon={ICONS.check} size={22} color={COLORS.mint} /> 已加入待办
+            </div>
           </div>
           <div
             style={{
@@ -220,7 +202,7 @@ export const VoiceScene: React.FC = () => {
               fontFamily: FONT.sanJi
             }}
           >
-            对话内容驱动 Live2D 表情动作
+            <Icon icon={ICONS.smile} size={24} color={COLORS.pinkDark} /> 她笑着点点头
           </div>
         </RoundedCard>
       </div>

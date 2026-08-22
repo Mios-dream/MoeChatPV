@@ -92,7 +92,7 @@ export const MoeChatPV: React.FC = () => {
       <Audio
         src={staticFile('bgm/bgm.mp3')}
         volume={(frame) =>
-          interpolate(frame, [0, 15, durationInFrames - 45, durationInFrames], [0, 0.16, 0.16, 0], {
+          interpolate(frame, [0, 15, durationInFrames - 45, durationInFrames], [0, 0.1, 0.1, 0], {
             extrapolateLeft: 'clamp',
             extrapolateRight: 'clamp'
           })

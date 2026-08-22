@@ -21,10 +21,10 @@ export const DesktopScene: React.FC = () => {
       <SceneBackground from="#fffdfe" via="#ffeef4" to="#ffd9e4" sparkleSeed={29} />
       <SceneTitle
         delay={8}
-        sub="像养电子宠物一样，布置你的桌面"
+        sub="她待在桌边，空白留给你"
         icon={<Icon icon={ICONS.laptop} size={54} color={COLORS.pinkDark} />}
       >
-        桌面小窝，随心布置
+        把智乃放在你看得见的地方
       </SceneTitle>
 
       <div

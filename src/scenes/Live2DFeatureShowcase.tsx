@@ -60,7 +60,7 @@ export const Live2DFeatureShowcase: React.FC = () => {
             textShadow: `0 6px 24px ${COLORS.pinkShadow}`
           }}
         >
-          角色陪伴，功能随叫随到
+          她住进桌面以后
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export const Live2DFeatureShowcase: React.FC = () => {
           transformOrigin: 'left top'
         }}
       >
-        <WindowFrame width={1300} height={760} title="MoeChat 功能演示" popDelay={12}>
+        <WindowFrame width={1300} height={760} title="智乃的桌面" popDelay={12}>
           <div
             style={{
               position: 'absolute',
@@ -163,12 +163,12 @@ export const Live2DFeatureShowcase: React.FC = () => {
               >
                 <Icon icon={TABS[activeTab].icon} size={22} color={COLORS.pinkDark} />
                 {TABS[activeTab].label === '聊天'
-                  ? '实时聊天 · 语音 · 表情动作'
+                  ? '开口就有回应，表情也会动'
                   : TABS[activeTab].label === '待办'
-                    ? '让助手帮你制定待办列表'
+                  ? '说一声，智乃替你记下来'
                     : TABS[activeTab].label === '天气'
-                      ? '天气查询，即问即答'
-                      : '日记本，记录每一天'}
+                      ? '抬头之前，天气已经查好'
+                      : '今天的事，留给明天再翻开'}
               </div>
             </div>
           </div>
@@ -182,25 +182,25 @@ export const Live2DFeatureShowcase: React.FC = () => {
           }}
         >
           <FeatureChip
-            label="语音识别"
+            label="开口就有回应"
             icon={<Icon icon={ICONS.micLines} size={22} color={COLORS.pink} />}
             delay={42}
             size={21}
           />
           <FeatureChip
-            label="表情动作"
+            label="情绪会动"
             icon={<Icon icon={ICONS.masks} size={22} color={COLORS.pink} />}
             delay={56}
             size={21}
           />
           <FeatureChip
-            label="小组件"
+            label="桌边小事"
             icon={<Icon icon={ICONS.clock} size={22} color={COLORS.pink} />}
             delay={70}
             size={21}
           />
           <FeatureChip
-            label="低占用"
+            label="安静待机"
             icon={<Icon icon={ICONS.battery} size={22} color={COLORS.pink} />}
             delay={84}
             size={21}

@@ -31,7 +31,7 @@ export const Outro: React.FC = () => {
         }}
       >
         <PopText
-          text="把澪酱带回家吧！"
+          text="把智乃放回你的桌面吧！"
           delay={45}
           fontSize={104}
           color={COLORS.pinkDark}
@@ -57,7 +57,7 @@ export const Outro: React.FC = () => {
         }}
       >
         <Icon icon={ICONS.heart} size={36} color={COLORS.pinkDark} />
-        你的桌面，从此不再孤单
+        她会记得你，也会等你回来
       </div>
 
       <div

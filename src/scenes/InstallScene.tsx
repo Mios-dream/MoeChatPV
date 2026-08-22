@@ -10,7 +10,7 @@ const STEPS = [
   { icon: ICONS.download, title: '下载整合包', desc: '一键下载完整版' },
   { icon: ICONS.folder, title: '解压到本地', desc: '免安装，即开即用' },
   { icon: ICONS.rocket, title: '打开 MoeChat', desc: 'Windows / Linux 都支持' },
-  { icon: ICONS.handSparkles, title: '和澪酱打招呼！', desc: '你好呀，初次见面～', mascot: true }
+  { icon: ICONS.handSparkles, title: '和智乃打招呼！', desc: '你好呀，初次见面～', mascot: true }
 ]
 
 export const InstallScene: React.FC = () => {
@@ -24,7 +24,7 @@ export const InstallScene: React.FC = () => {
         sub="从下载到开聊，三步搞定"
         icon={<Icon icon={ICONS.rocket} size={54} color={COLORS.pinkDark} />}
       >
-        三步带走澪酱
+        下载以后，马上开聊
       </SceneTitle>
 
       <div

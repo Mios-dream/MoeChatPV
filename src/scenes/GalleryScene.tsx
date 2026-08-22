@@ -13,10 +13,10 @@ export const GalleryScene: React.FC = () => {
       <SceneBackground from="#fffdfe" via="#fff0f6" to="#ffd9e6" sparkleSeed={15} />
       <SceneTitle
         delay={8}
-        sub="功能持续进化中，更多惊喜在路上"
+        sub="把每天留下来，过一阵子再翻开"
         icon={<Icon icon={ICONS.book} size={54} color={COLORS.pinkDark} />}
       >
-        更多玩法
+        日子会留下痕迹
       </SceneTitle>
 
       <div style={{ position: 'absolute', left: 210, top: 300 }}>

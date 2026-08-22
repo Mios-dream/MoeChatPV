@@ -10,9 +10,10 @@ const Meter: React.FC<{
   label: string
   icon: React.ReactNode
   value: number
+  displayValue?: string
   color: string
   delay: number
-}> = ({ label, icon, value, color, delay }) => {
+}> = ({ label, icon, value, displayValue, color, delay }) => {
   const frame = useCurrentFrame()
   const p = usePop(frame, delay)
   const w = interpolate(frame, [delay + 20, delay + 60], [0, value], {
@@ -37,7 +38,7 @@ const Meter: React.FC<{
           {icon}
           {label}
         </span>
-        <span style={{ color }}>{Math.round(w)}%</span>
+        <span style={{ color }}>{displayValue ?? `${Math.round(w)}%`}</span>
       </div>
       <div
         style={{
@@ -68,10 +69,10 @@ export const PerfScene: React.FC = () => {
       <SceneBackground from="#fffdfe" via="#f2f9ff" to="#dcedff" sparkleSeed={55} />
       <SceneTitle
         delay={8}
-        sub="陪你摸鱼，也要轻装上阵"
+        sub="不抢屏幕，也不抢你的机器"
         icon={<Icon icon={ICONS.bolt} size={54} color={COLORS.gold} />}
       >
-        轻盈不打扰
+        她在运行，风扇不用加班
       </SceneTitle>
 
       <div style={{ position: 'absolute', left: 300, top: 300 }}>
@@ -90,14 +91,15 @@ export const PerfScene: React.FC = () => {
             <Meter
               label="内存占用"
               icon={<Icon icon={ICONS.brain} size={26} color={COLORS.blue} />}
-              value={18}
+              value={11}
+              displayValue="1.1 GB"
               color={COLORS.blue}
               delay={70}
             />
             <Meter
               label="CPU 占用"
               icon={<Icon icon={ICONS.bolt} size={26} color={COLORS.mint} />}
-              value={12}
+              value={10}
               color={COLORS.mint}
               delay={95}
             />
@@ -143,9 +145,9 @@ export const PerfScene: React.FC = () => {
                 }}
               >
                 <Icon icon={ICONS.battery} size={26} color={COLORS.mint} />
-                低占用模式
+                智乃的低占用模式
                 <span style={{ color: COLORS.textGray, fontSize: 20 }}>
-                  全屏 / 高负载时自动卸载部分模型
+                  全屏 / 高负载时自动收起部分模型
                 </span>
               </div>
             </div>
@@ -160,7 +162,7 @@ export const PerfScene: React.FC = () => {
               }}
             >
               <Icon icon={ICONS.brain} size={24} color={COLORS.purple} />
-              智能内存管理 · 动态调整资源占用策略
+              R7 7735H · CPU 约 10% · 内存约 1.1 GB
             </div>
           </div>
         </WindowFrame>
