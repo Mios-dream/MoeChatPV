@@ -44,6 +44,9 @@ npm run live2d:asset -- --name hero-idle --seconds 20 --no-tts --no-motion
 
 # 需要在传统剪辑软件中抠像时，输出纯绿幕 H.264 视频
 npm run live2d:asset -- --name greeting-key --text "欢迎回来，阁下" --background chroma
+
+# 使用已有音频 / 动作配置重新渲染（不会请求后端）
+npm run live2d:asset -- --name feature-chat --text "想聊天、查天气，还是记下今天的心情？告诉我吧。" --from-props public/live2d-generated/feature-chat/render-props.json --seconds 12
 ```
 
 后端默认地址为 `http://127.0.0.1:8001`，可通过 `--api-base` 覆盖。透明素材使用 VP9 + Alpha；脚本始终使用 `--concurrency=1`，保证同一个 Live2D 实例按帧顺序推进。语音文件会被分析为口型强度曲线，和 `/api/generate_motion` 返回的动作曲线一起写入独立素材。
