@@ -406,6 +406,55 @@ export const StripedStage: React.FC<{
   )
 }
 
+/**
+ * 旋转五瓣花朵：与角色展示阶段的角花一致，用于场景背景点缀。
+ */
+export const RotatingFlower: React.FC<{
+  left: number
+  top: number
+  size: number
+  opacity: number
+  offset: number
+  tint?: string
+}> = ({ left, top, size, opacity, offset, tint = '#f6a7bf' }) => {
+  const frame = useCurrentFrame()
+  const petalWidth = size * 0.52
+  const petalHeight = size * 0.38
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left,
+        top,
+        width: size,
+        height: size,
+        opacity,
+        transform: `translate(-50%, -50%) rotate(${offset + frame * 5}deg)`,
+        transformOrigin: 'center center',
+        pointerEvents: 'none'
+      }}
+    >
+      {Array.from({ length: 5 }, (_, index) => (
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            width: petalWidth,
+            height: petalHeight,
+            background: tint,
+            borderRadius: '50%',
+            transform: `translateY(-50%) rotate(${index * 72}deg)`,
+            transformOrigin: '0 50%'
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 export const easeOut = Easing.bezier(0.16, 1, 0.3, 1)
 export const easeInOut = Easing.bezier(0.45, 0, 0.55, 1)
 export const popEase = Easing.bezier(0.34, 1.56, 0.64, 1)

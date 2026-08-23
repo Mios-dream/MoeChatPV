@@ -11,7 +11,7 @@ import {
 import { Audio } from '@remotion/media'
 import { FONT } from '../theme'
 
-export const SHOWCASE_DURATION = 308
+export const SHOWCASE_DURATION = 340
 
 type PortraitShotProps = {
   from: number
@@ -269,7 +269,7 @@ export const Live2DCharacterShowcase: React.FC = () => {
           fadeOutEnd: 190
         }}
       />
-      <Sequence from={160} durationInFrames={SHOWCASE_DURATION - 190} premountFor={12}>
+      <Sequence from={160} durationInFrames={SHOWCASE_DURATION - 164} premountFor={12}>
         <Audio src={staticFile('live2d-generated/greeting/voice.wav')} volume={0.96} from={1} />
       </Sequence>
       <Sequence from={170} durationInFrames={SHOWCASE_DURATION - 170} premountFor={12}>

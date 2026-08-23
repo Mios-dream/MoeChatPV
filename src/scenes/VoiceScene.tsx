@@ -1,145 +1,156 @@
 import React from 'react'
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { StripedStage, usePop } from '../fx'
-import { ChatBubble, WindowFrame } from '../ui'
+import { RotatingFlower, StripedStage, usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-// 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
-export const VOICE_ASSET = {
-  name: 'voice-listen',
-  durationInFrames: 308
-}
+// 三条风格化回复，按顺序轮播；左侧情景卡跟随当前回复切换。
+// 素材由 scripts/create-live2d-asset.mjs 生成，时长以 source.json 为准。
+export const CHAT_REPLIES = [
+  {
+    category: '待办提醒',
+    categoryIcon: ICONS.listCheck as IconDefinition,
+    asset: 'chat-reply-1',
+    durationInFrames: 221,
+    start: 10
+  },
+  {
+    category: '天气提醒',
+    categoryIcon: ICONS.cloudSun as IconDefinition,
+    asset: 'chat-reply-2',
+    durationInFrames: 220,
+    start: 240
+  },
+  {
+    category: '深夜陪伴',
+    categoryIcon: ICONS.moon as IconDefinition,
+    asset: 'chat-reply-3',
+    durationInFrames: 242,
+    start: 469
+  }
+]
+
+export const CHAT_SCENE_DURATION =
+  CHAT_REPLIES[CHAT_REPLIES.length - 1].start +
+  CHAT_REPLIES[CHAT_REPLIES.length - 1].durationInFrames +
+  36
+
+const HEAD_ZOOM = { scale: 2.0, focusX: 0.5, focusY: 0.27 }
 
 export const VoiceScene: React.FC = () => {
   const frame = useCurrentFrame()
-  const noteP = usePop(frame, 150)
-  const micP = usePop(frame, 10)
+  const titleP = usePop(frame, 6)
+  let active = 0
+  for (let i = 0; i < CHAT_REPLIES.length; i++) {
+    const r = CHAT_REPLIES[i]
+    if (frame >= r.start && frame < r.start + r.durationInFrames) {
+      active = i
+      break
+    }
+  }
+  const scenarioP = usePop(frame, CHAT_REPLIES[active].start + 6)
+  const cardP = usePop(frame, 26)
 
   return (
     <AbsoluteFill>
       <StripedStage />
 
-      {/* 场景内的小标签：像是对话中的状态提示，而不是章节标题。 */}
+      {/* 左上角标题：与「她住进桌面以后」同款设计。 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 50,
+          top: 72,
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 16,
+          opacity: titleP
+        }}
+      >
+        <Icon icon={ICONS.comments} size={40} color={COLORS.gold} />
+        <div
+          style={{
+            fontFamily: FONT.kaTong,
+            fontSize: 50,
+            color: COLORS.pinkDark,
+            letterSpacing: 2,
+            textShadow: `0 6px 24px ${COLORS.pinkShadow}`
+          }}
+        >
+          聊天展示
+        </div>
+      </div>
+
+      {/* 左侧：当前类别的标签，一次只展示一条。 */}
       <div
         style={{
           position: 'absolute',
           left: 150,
-          top: 96,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          padding: '12px 24px',
-          borderRadius: 999,
-          background: 'rgba(255,255,255,0.92)',
-          border: `2px solid ${COLORS.pinkPale}`,
-          boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
-          fontFamily: FONT.sanJi,
-          fontSize: 24,
-          fontWeight: 700,
-          color: COLORS.textDark,
-          opacity: micP
-        }}
-      >
-        <Icon icon={ICONS.micLines} size={26} color={COLORS.pinkDark} />
-        在桌边 · 听你说
-      </div>
-
-      {/* 对话窗口：一次完整的「你说 → 她回 → 她记下」。 */}
-      <div style={{ position: 'absolute', left: 150, top: 250 }}>
-        <WindowFrame width={780} height={560} title="和智乃的对话" popDelay={24}>
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              padding: '18px 0',
-              background: '#fff',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center'
-            }}
-          >
-            <ChatBubble side="user" delay={40}>
-              周六下午三点，提醒我吃火锅。
-            </ChatBubble>
-            <ChatBubble side="assistant" delay={78}>
-              听见啦～周六的火锅，我已经记在待办里啦，到时间会叫阁下的！
-            </ChatBubble>
-          </div>
-        </WindowFrame>
-      </div>
-
-      {/* 她说「记好了」时，待办像她的笔记一样出现在手边。 */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 300,
-          bottom: 195,
+          top: 400,
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          padding: '18px 28px',
-          borderRadius: 22,
-          background: 'rgba(255,255,255,0.95)',
+          padding: '20px 34px',
+          borderRadius: 999,
+          background: 'rgba(255,255,255,0.94)',
           border: `2px solid ${COLORS.pinkPale}`,
-          boxShadow: `0 16px 38px -14px ${COLORS.pinkShadow}`,
-          fontFamily: FONT.sanJi,
-          opacity: noteP,
-          transform: `translateY(${(1 - noteP) * 24}px) scale(${0.88 + 0.12 * noteP})`
+          boxShadow: `0 18px 44px -16px ${COLORS.pinkShadow}`,
+          opacity: cardP,
+          transform: `scale(${0.86 + 0.14 * cardP})`
         }}
       >
-        <Icon icon={ICONS.noteSticky} size={34} color={COLORS.pinkDark} />
-        <div>
-          <div
-            style={{
-              fontSize: 22,
-              color: COLORS.textGray,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14
-            }}
-          >
-            <span>周六</span>
-            <span>15:00</span>
-            <span
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                color: COLORS.mint,
-                fontWeight: 700
-              }}
-            >
-              <Icon icon={ICONS.check} size={20} color={COLORS.mint} />
-              已加入待办
-            </span>
-          </div>
-          <div
-            style={{
-              fontSize: 27,
-              fontWeight: 700,
-              color: COLORS.textDark,
-              marginTop: 2
-            }}
-          >
-            和朋友吃火锅
-          </div>
+        <Icon icon={CHAT_REPLIES[active].categoryIcon} size={34} color={COLORS.pinkDark} />
+        <div
+          style={{
+            fontFamily: FONT.kaTong,
+            fontSize: 38,
+            color: COLORS.pinkDark,
+            opacity: scenarioP,
+            transform: `translateY(${(1 - scenarioP) * 16}px)`
+          }}
+        >
+          {CHAT_REPLIES[active].category}
         </div>
       </div>
 
-      {/* 智乃本尊：听见、回应、点头。 */}
-      <CharacterClip
-        name={VOICE_ASSET.name}
-        durationInFrames={VOICE_ASSET.durationInFrames}
-        voiceVolume={0.96}
+      {/* 与前面环节一致的旋转花朵点缀。 */}
+      <RotatingFlower left={170} top={210} size={118} opacity={0.58} offset={12} />
+      <RotatingFlower left={1780} top={230} size={84} opacity={0.5} offset={72} />
+      <RotatingFlower left={180} top={880} size={78} opacity={0.48} offset={210} />
+      <RotatingFlower left={1740} top={860} size={142} opacity={0.56} offset={148} />
+
+      {/* 角色头部特写：画面中心，逐条回应，展示表情与口型。 */}
+      <div
         style={{
-          right: -280,
-          top: -80,
-          width: 1280,
-          height: 1280
+          position: 'absolute',
+          left: 660,
+          top: 150,
+          width: 1100,
+          height: 1100,
+          borderRadius: '50%',
+          // background: 'radial-gradient(circle, rgba(255,214,228,0.55) 0%, rgba(255,214,228,0) 68%)',
+          pointerEvents: 'none'
         }}
       />
+      {CHAT_REPLIES.map((r, i) => (
+        <CharacterClip
+          key={r.asset}
+          name={r.asset}
+          durationInFrames={r.durationInFrames}
+          start={r.start}
+          voiceVolume={0.96}
+          zoom={HEAD_ZOOM}
+          style={{
+            left: 250,
+            top: -100,
+            width: 1100,
+            height: 1100
+          }}
+        />
+      ))}
     </AbsoluteFill>
   )
 }

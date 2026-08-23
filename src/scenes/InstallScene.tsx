@@ -18,7 +18,7 @@ const STEPS = [
   { icon: ICONS.download, title: '来接她吧', desc: '下载整合包，一键搞定' },
   { icon: ICONS.folder, title: '给她安个家', desc: '解压到本地，免安装' },
   { icon: ICONS.rocket, title: '她住进桌面', desc: '打开 MoeChat，Windows / Linux 都行' },
-  { icon: ICONS.handSparkles, title: '初次见面～', desc: '你好呀，阁下，我等你好久啦', mascot: true }
+  { icon: ICONS.handSparkles, title: '初次见面～', desc: '你好呀，哥哥，我等你好久啦', mascot: true }
 ]
 
 export const InstallScene: React.FC = () => {
@@ -56,7 +56,7 @@ export const InstallScene: React.FC = () => {
         ))}
       </div>
 
-      {/* 第二步：她登场，和阁下打招呼。 */}
+      {/* 第二步：她登场，和哥哥打招呼。 */}
       <div
         style={{
           position: 'absolute',
@@ -82,7 +82,7 @@ export const InstallScene: React.FC = () => {
             color: COLORS.pinkDark
           }}
         >
-          欢迎回家，阁下！
+          欢迎回家，哥哥！
         </div>
       </div>
 

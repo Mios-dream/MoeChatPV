@@ -9,7 +9,7 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 // 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
 export const DAY_ASSET = {
   name: 'day-companion',
-  durationInFrames: 278
+  durationInFrames: 308
 }
 
 const TIMES = [
@@ -18,7 +18,7 @@ const TIMES = [
     label: '早安',
     icon: ICONS.sun as IconDefinition,
     color: COLORS.gold,
-    line: '早上好呀，今天也要元气满满！',
+    line: '早、早啊，笨蛋哥哥……今天也要元气满满哦！',
     delay: 20
   },
   {
@@ -42,7 +42,7 @@ const TIMES = [
     label: '晚安',
     icon: ICONS.star as IconDefinition,
     color: COLORS.blue,
-    line: '晚安，阁下，明天见。',
+    line: '晚安，笨蛋哥哥……才不是舍不得你呢！',
     delay: 125
   }
 ]
@@ -198,7 +198,7 @@ export const ScenesScene: React.FC = () => {
         <TimeNode key={i} {...t} y={215 + i * 130} />
       ))}
 
-      {/* 助手空间：她的朋友们也可以换着陪伴阁下。 */}
+      {/* 助手空间：她的朋友们也可以换着陪伴哥哥。 */}
       <div
         style={{
           position: 'absolute',

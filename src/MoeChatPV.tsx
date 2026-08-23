@@ -7,47 +7,36 @@ import { SubtitleLayer } from './subtitles'
 import { StripedStage } from './fx'
 import { Opening } from './scenes/Opening'
 import { Live2DCharacterShowcase, SHOWCASE_DURATION } from './scenes/Live2DCharacterShowcase'
-import { FEATURE_START, Live2DFeatureShowcase } from './scenes/Live2DFeatureShowcase'
-import { VoiceScene } from './scenes/VoiceScene'
+import { CHAT_SCENE_DURATION, VoiceScene } from './scenes/VoiceScene'
 import { ScenesScene } from './scenes/ScenesScene'
-import { DesktopScene } from './scenes/DesktopScene'
-import { PerfScene } from './scenes/PerfScene'
+import { SleepScene } from './scenes/SleepScene'
 import { GalleryScene } from './scenes/GalleryScene'
+import { WidgetShowcase } from './scenes/WidgetShowcase'
 import { InstallScene } from './scenes/InstallScene'
 import { Outro } from './scenes/Outro'
 
 // PV 主片段时长，单位为帧；相邻片段会被 TRANSITION 的时长叠加。
 export const SCENE_DURATIONS = {
   opening: 270,
-  hero: 750,
-  voice: 345,
-  scenes: 375,
-  desktop: 315,
-  perf: 225,
-  gallery: 270,
+  hero: 375,
+  chat: CHAT_SCENE_DURATION,
+  scenarios: 375,
+  sleep: 360,
+  diary: 270,
+  widgets: 420,
   install: 420,
   outro: 420
 }
 
 export const TRANSITION = 15
 
-// Hero 阶段一：角色立绘、名称出现、旋转花朵与横幅退场。
-// 占 Hero 段的第 0-319 帧；角色展示主体在第 308 帧结束。
+// Hero 阶段：角色亮相（立绘运镜、名称出现、问候），功能演示移到后半段的小组件场景。
 const HeroCharacterStage: React.FC = () => (
   <AbsoluteFill>
     <StripedStage />
     <Sequence durationInFrames={SHOWCASE_DURATION}>
       <Live2DCharacterShowcase />
     </Sequence>
-  </AbsoluteFill>
-)
-
-// Hero 阶段二：功能演示窗口与 Live2D 助手展示。
-// 从 FEATURE_START 开始，此时角色介绍阶段的背景已经完成退场。
-const HeroFeatureStage: React.FC = () => (
-  <AbsoluteFill>
-    <StripedStage />
-    <Live2DFeatureShowcase />
   </AbsoluteFill>
 )
 
@@ -73,65 +62,48 @@ export const MoeChatPV: React.FC = () => {
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.opening}>
           <Opening />
         </TransitionSeries.Sequence>
-        {/* 开场 -> Live2D 主展示：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 2. Live2D 主展示：先介绍角色，再展示产品功能。 */}
+        {/* 2. 角色展示：智乃登场。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.hero}>
-          <AbsoluteFill>
-            {/* 角色介绍的背景与内容：第 0-319 帧。 */}
-            <Sequence durationInFrames={FEATURE_START}>
-              <HeroCharacterStage />
-            </Sequence>
-            {/* 功能展示的背景与内容：从第 320 帧开始。 */}
-            <Sequence from={FEATURE_START}>
-              <HeroFeatureStage />
-            </Sequence>
-          </AbsoluteFill>
+          <HeroCharacterStage />
         </TransitionSeries.Sequence>
-        {/* Live2D 主展示 -> 语音时刻：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 3. 你开口，她就听见。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.voice}>
+        {/* 3. 聊天展示：头部特写 + 多条符合人设的日常回复轮播。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.chat}>
           <VoiceScene />
         </TransitionSeries.Sequence>
-        {/* 语音时刻 -> 日常陪伴：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 4. 从早到晚，她都在。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.scenes}>
+        {/* 4. 聊天情景：从早到晚的早安、晚安。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.scenarios}>
           <ScenesScene />
         </TransitionSeries.Sequence>
-        {/* 日常陪伴 -> 桌边小窝：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 5. 桌边小窝。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.desktop}>
-          <DesktopScene />
+        {/* 5. 睡眠模式：Live2D 真实睡眠状态（闭眼小憩 / 半醒回答）。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.sleep}>
+          <SleepScene />
         </TransitionSeries.Sequence>
-        {/* 桌边小窝 -> 安静时刻：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 6. 你忙的时候，她安静下来。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.perf}>
-          <PerfScene />
-        </TransitionSeries.Sequence>
-        {/* 安静时刻 -> 她的日记本：淡入淡出。 */}
-        <TransitionSeries.Transition presentation={fade()} timing={t} />
-
-        {/* 7. 她的日记本。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.gallery}>
+        {/* 6. 她的日记本。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.diary}>
           <GalleryScene />
         </TransitionSeries.Sequence>
-        {/* 她的日记本 -> 把她带回家：淡入淡出。 */}
+        <TransitionSeries.Transition presentation={fade()} timing={t} />
+
+        {/* 7. 功能演示：纯小组件演示（时钟 / 天气 / 每日一句 / 任务板 / 便签）。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.widgets}>
+          <WidgetShowcase />
+        </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
         {/* 8. 把她带回家。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.install}>
           <InstallScene />
         </TransitionSeries.Sequence>
-        {/* 把她带回家 -> 结尾：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
         {/* 9. 结尾页。 */}

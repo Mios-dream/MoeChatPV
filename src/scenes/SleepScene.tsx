@@ -2,14 +2,13 @@ import React from 'react'
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
 import { StripedStage, usePop } from '../fx'
-import { Mascot } from '../mascot'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
 
-// 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
-export const QUIET_ASSET = {
-  name: 'quiet-mode',
-  durationInFrames: 299
+// 由 scripts/create-live2d-asset.mjs 生成（--sleep），时长以 source.json 为准。
+export const SLEEP_ASSET = {
+  name: 'sleep-mode',
+  durationInFrames: 527
 }
 
 const Meter: React.FC<{
@@ -60,9 +59,9 @@ const Meter: React.FC<{
   )
 }
 
-export const PerfScene: React.FC = () => {
+export const SleepScene: React.FC = () => {
   const frame = useCurrentFrame()
-  const zP = interpolate(frame, [70, 130], [0, 1], {
+  const zP = interpolate(frame, [80, 150], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
@@ -71,7 +70,7 @@ export const PerfScene: React.FC = () => {
     <AbsoluteFill>
       <StripedStage />
 
-      {/* 场景内的小标签：她懂事地休息。 */}
+      {/* 场景内的小标签：睡眠模式。 */}
       <div
         style={{
           position: 'absolute',
@@ -91,45 +90,39 @@ export const PerfScene: React.FC = () => {
           color: COLORS.textDark
         }}
       >
-        <Icon icon={ICONS.bolt} size={26} color={COLORS.gold} />
-        你忙的时候，她安静下来
+        <Icon icon={ICONS.moon} size={26} color={COLORS.purple} />
+        睡眠模式
       </div>
 
-      {/* 吉祥物小憩：画面主体是「她休息了」。 */}
+      {/* 月光 + 睡意氛围，陪在她身边。 */}
       <div
         style={{
           position: 'absolute',
-          left: 240,
+          left: 220,
+          top: 240,
+          width: 220,
+          height: 220,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(183,140,232,0.22) 0%, rgba(183,140,232,0) 70%)'
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 270,
           top: 300,
-          width: 560,
-          height: 420,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: 40,
-          background:
-            'radial-gradient(ellipse at center, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.72) 62%, rgba(255,255,255,0) 78%)'
+          fontFamily: FONT.kaTong,
+          fontSize: 64,
+          color: COLORS.purple,
+          opacity: zP,
+          transform: `translateY(${(1 - zP) * 20}px)`,
+          letterSpacing: 8
         }}
       >
-        <Mascot size={250} delay={30} mood="sleep" />
-        <div
-          style={{
-            position: 'absolute',
-            right: 70,
-            top: 40,
-            fontFamily: FONT.kaTong,
-            fontSize: 54,
-            color: COLORS.pinkLight,
-            opacity: zP,
-            transform: `translateY(${(1 - zP) * 18}px)`,
-            letterSpacing: 6
-          }}
-        >
-          z Z
-        </div>
+        z Z
       </div>
 
-      {/* 数据退到角落：只留一小张状态卡。 */}
+      {/* 低占用数据退到角落：睡眠模式 = 她安静地休息。 */}
       <div
         style={{
           position: 'absolute',
@@ -187,20 +180,20 @@ export const PerfScene: React.FC = () => {
           }}
         >
           <Icon icon={ICONS.brain} size={18} color={COLORS.purple} />
-          R7 7735H 实测 · 全屏/高负载时自动收起部分模型
+          R7 7735H 实测 · 睡眠时自动收起部分模型
         </div>
       </div>
 
-      {/* 智乃本尊：小声地说完就去休息。 */}
+      {/* 智乃本尊：闭眼小憩，被叫到时半睁着眼回答。 */}
       <CharacterClip
-        name={QUIET_ASSET.name}
-        durationInFrames={QUIET_ASSET.durationInFrames}
+        name={SLEEP_ASSET.name}
+        durationInFrames={SLEEP_ASSET.durationInFrames}
         voiceVolume={0.96}
         style={{
-          right: -320,
-          top: -90,
-          width: 1300,
-          height: 1300
+          right: -300,
+          top: -100,
+          width: 1320,
+          height: 1320
         }}
       />
     </AbsoluteFill>

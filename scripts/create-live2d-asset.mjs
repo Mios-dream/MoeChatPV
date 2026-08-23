@@ -23,6 +23,7 @@ const minimumSeconds = Number(takeValue('--seconds', '0'))
 const fromPropsPath = takeValue('--from-props', '')
 const useTts = !hasFlag('--no-tts')
 const useMotion = !hasFlag('--no-motion')
+const sleepMode = hasFlag('--sleep')
 
 if (!['transparent', 'chroma'].includes(background)) {
   throw new Error('--background must be transparent or chroma')
@@ -209,6 +210,63 @@ if (typeof ttsResponse?.file === 'string' && ttsResponse.file.length > 0) {
 }
 
 const motion = normalizeMotion(motionResponse)
+
+// 睡眠模式：参考 Live2DSleepController，覆盖眼部参数。
+// 说话时眼睛半睁 + 视线游移（半醒对话），不说话时闭眼并带低频微动，
+// 同时压低头部/身体动作幅度，模拟睡眠状态下的静止感。
+if (sleepMode && motion) {
+  const motionFps = Number(motion.fps) || 30
+  const curveLengths = Object.values(motion.curves).map((values) =>
+    Array.isArray(values) ? values.length : 0
+  )
+  const frameCount = Math.max(
+    ...curveLengths,
+    Math.ceil((Math.max(minimumSeconds, audioDuration, motion.durationMs / 1000) + 0.25) * motionFps) + 1
+  )
+  const isSpeaking = (frameIndex) => {
+    const cueIndex = Math.min(
+      mouthCues.length - 1,
+      Math.max(0, Math.round((frameIndex / motionFps) * fps))
+    )
+    return (mouthCues[cueIndex] ?? 0) > 0.045
+  }
+  const eyeLOpen = []
+  const eyeROpen = []
+  const eyeBallX = []
+  const eyeBallY = []
+  let openness = 0
+  for (let i = 0; i < frameCount; i++) {
+    const speaking = isSpeaking(i)
+    const wander = Math.sin(i * 0.045) * 0.45
+    const target = speaking ? 0.34 + wander * 0.14 : 0
+    openness += (target - openness) * (speaking ? 0.32 : 0.08)
+    // 睡眠微动：偶尔短暂睁眼再闭回（约每 8 秒一次）
+    if (!speaking && i % 240 >= 104 && i % 240 < 112) {
+      openness = Math.max(openness, 0.08)
+    }
+    eyeLOpen.push(Math.max(0, Math.min(0.8, openness)))
+    eyeROpen.push(Math.max(0, Math.min(0.8, openness * 0.96)))
+    eyeBallX.push(speaking ? Math.sin(i * 0.02) * 0.18 : 0)
+    eyeBallY.push(speaking ? -0.06 + Math.cos(i * 0.025) * 0.08 : 0)
+  }
+  motion.curves.ParamEyeLOpen = eyeLOpen
+  motion.curves.ParamEyeROpen = eyeROpen
+  motion.curves.ParamEyeBallX = eyeBallX
+  motion.curves.ParamEyeBallY = eyeBallY
+  for (const paramId of [
+    'ParamAngleX',
+    'ParamAngleY',
+    'ParamAngleZ',
+    'ParamBodyAngleX',
+    'ParamBodyAngleY',
+    'ParamBodyAngleZ'
+  ]) {
+    if (Array.isArray(motion.curves[paramId])) {
+      motion.curves[paramId] = motion.curves[paramId].map((value) => value * 0.25)
+    }
+  }
+}
+
 const motionDuration = motion ? motion.durationMs / 1000 : 0
 const durationSeconds = Math.max(minimumSeconds, audioDuration, motionDuration, 1) + 0.25
 const durationInFrames = Math.ceil(durationSeconds * fps)
