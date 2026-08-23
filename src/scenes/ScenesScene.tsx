@@ -1,35 +1,49 @@
 import React from 'react'
-import { AbsoluteFill, useCurrentFrame } from 'remotion'
+import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
 import { SceneBackground, usePop } from '../fx'
-import { RoundedCard, SceneTitle, Screenshot } from '../ui'
 import { Icon, ICONS } from '../icons'
+import { CharacterClip } from '../live2d/CharacterClip'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-const SCENARIOS = [
+// 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
+export const DAY_ASSET = {
+  name: 'day-companion',
+  durationInFrames: 278
+}
+
+const TIMES = [
   {
+    clock: '06:00',
+    label: '早安',
     icon: ICONS.sun as IconDefinition,
-    title: '早安问候',
-    text: '早上好呀，今天也要元气满满！',
-    color: COLORS.gold
+    color: COLORS.gold,
+    line: '早上好呀，今天也要元气满满！',
+    delay: 20
   },
   {
+    clock: '12:00',
+    label: '白天',
+    icon: ICONS.cloudSun as IconDefinition,
+    color: COLORS.pink,
+    line: '想聊什么，我都听着呢～',
+    delay: 55
+  },
+  {
+    clock: '23:00',
+    label: '深夜',
     icon: ICONS.moon as IconDefinition,
-    title: '深夜吐槽',
-    text: '吐槽大会现在开始～',
-    color: COLORS.purple
+    color: COLORS.purple,
+    line: '吐槽大会，现在开始！',
+    delay: 90
   },
   {
-    icon: ICONS.gift as IconDefinition,
-    title: '节日祝福',
-    text: '节日快乐，智乃的祝福请查收！',
-    color: COLORS.pinkDark
-  },
-  {
-    icon: ICONS.heart as IconDefinition,
-    title: '日常陪伴',
-    text: '我在呢，一直都在。',
-    color: COLORS.pink
+    clock: '24:00',
+    label: '晚安',
+    icon: ICONS.star as IconDefinition,
+    color: COLORS.blue,
+    line: '晚安，阁下，明天见。',
+    delay: 125
   }
 ]
 
@@ -39,190 +53,230 @@ const ASSISTANTS = [
   { icon: ICONS.cat, name: '毒舌猫猫', color: '#8fc8f0' }
 ]
 
-export const ScenesScene: React.FC = () => {
-  const frame = useCurrentFrame()
-  const panelP = usePop(frame, 210)
-  return (
-    <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#fff0f6" to="#ffd8e5" sparkleSeed={9} />
-      <SceneTitle
-        delay={8}
-        sub="早安、吐槽、祝福，换个时间也认得你"
-        icon={<Icon icon={ICONS.moon} size={54} color={COLORS.purple} />}
-      >
-        从早安到晚安，她一直在这儿
-      </SceneTitle>
-
-      <div
-        style={{
-          position: 'absolute',
-          top: 295,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          gap: 28
-        }}
-      >
-        {SCENARIOS.map((s, i) => (
-          <ScenarioCard key={i} {...s} delay={30 + i * 26} />
-        ))}
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 140,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <RoundedCard width={1500} delay={200} accent={COLORS.pinkPale} pad={28}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 34,
-              width: '100%'
-            }}
-          >
-            <div
-              style={{
-                width: 400,
-                height: 245,
-                borderRadius: 18,
-                overflow: 'hidden',
-                background: '#fff',
-                border: `2px solid ${COLORS.pinkPale}`,
-                opacity: panelP,
-                transform: `scale(${0.9 + 0.1 * panelP})`
-              }}
-            >
-              <Screenshot src="images/assistant-space.png" delay={215} float={false} />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: 16
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 14,
-                  fontFamily: FONT.kaTong,
-                  fontSize: 38,
-                  color: COLORS.pinkDark,
-                  opacity: panelP
-                }}
-              >
-                <Icon icon={ICONS.house} size={40} color={COLORS.pinkDark} />
-                助手空间 —— 一人一位专属助手
-              </div>
-              <div style={{ display: 'flex', gap: 18, alignItems: 'center' }}>
-                {ASSISTANTS.map((a, i) => {
-                  const p = usePop(frame, 230 + i * 20)
-                  return (
-                    <div
-                      key={i}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 12,
-                        padding: '12px 22px',
-                        borderRadius: 999,
-                        background: '#fffafc',
-                        border: `2px solid ${a.color}`,
-                        opacity: p,
-                        transform: `translateY(${(1 - p) * 20}px)`
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 48,
-                          height: 48,
-                          borderRadius: '50%',
-                          background: a.color,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <Icon icon={a.icon} size={26} color={COLORS.white} />
-                      </div>
-                      <div
-                        style={{
-                          fontFamily: FONT.sanJi,
-                          fontSize: 25,
-                          fontWeight: 700,
-                          color: COLORS.textDark
-                        }}
-                      >
-                        {a.name}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  fontFamily: FONT.sanJi,
-                  fontSize: 23,
-                  color: COLORS.textGray,
-                  opacity: panelP
-                }}
-              >
-                <Icon icon={ICONS.wand} size={22} color={COLORS.pink} />
-                性格 · 声音 · 动作，全部可以自定义
-              </div>
-            </div>
-          </div>
-        </RoundedCard>
-      </div>
-    </AbsoluteFill>
-  )
-}
-
-const ScenarioCard: React.FC<{
+const TimeNode: React.FC<{
+  clock: string
+  label: string
   icon: IconDefinition
-  title: string
-  text: string
   color: string
+  line: string
   delay: number
-}> = ({ icon, title, text, color, delay }) => {
+  y: number
+}> = ({ clock, label, icon, color, line, delay, y }) => {
   const frame = useCurrentFrame()
   const p = usePop(frame, delay)
   return (
-    <RoundedCard width={310} height={290} delay={delay} pad={22}>
-      <Icon icon={icon} size={58} color={color} style={{ marginBottom: 10 }} />
+    <div
+      style={{
+        position: 'absolute',
+        left: 150,
+        top: y,
+        width: 620,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 20,
+        opacity: p,
+        transform: `translateY(${(1 - p) * 26}px)`
+      }}
+    >
       <div
         style={{
-          fontFamily: FONT.kaTong,
-          fontSize: 34,
-          color: COLORS.pinkDark,
-          marginBottom: 10
+          width: 86,
+          height: 86,
+          borderRadius: '50%',
+          background: color,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: `0 12px 26px -10px ${color}`,
+          border: `4px solid ${COLORS.white}`,
+          flexShrink: 0
         }}
       >
-        {title}
+        <Icon icon={icon} size={40} color={COLORS.white} />
       </div>
       <div
         style={{
+          flex: 1,
+          padding: '18px 24px',
+          borderRadius: 22,
+          background: 'rgba(255,255,255,0.94)',
+          border: `2px solid ${COLORS.pinkPale}`,
+          boxShadow: `0 14px 34px -14px ${COLORS.pinkShadow}`
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            fontFamily: FONT.kaTong,
+            fontSize: 30,
+            color: COLORS.pinkDark,
+            marginBottom: 6
+          }}
+        >
+          <span>{label}</span>
+          <span
+            style={{
+              fontFamily: FONT.sanJi,
+              fontSize: 20,
+              fontWeight: 700,
+              color,
+              background: `${color}22`,
+              padding: '3px 12px',
+              borderRadius: 999
+            }}
+          >
+            {clock}
+          </span>
+        </div>
+        <div
+          style={{
+            fontFamily: FONT.sanJi,
+            fontSize: 25,
+            color: COLORS.textDark,
+            fontWeight: 600
+          }}
+        >
+          {line}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export const ScenesScene: React.FC = () => {
+  const frame = useCurrentFrame()
+  const railP = interpolate(frame, [10, 160], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp'
+  })
+  const roomP = usePop(frame, 215)
+
+  return (
+    <AbsoluteFill>
+      <SceneBackground from="#fffdfe" via="#fff0f6" to="#ffd8e5" sparkleSeed={9} petals />
+
+      {/* 场景内的小标签：一整天的时间流。 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 150,
+          top: 96,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          padding: '12px 24px',
+          borderRadius: 999,
+          background: 'rgba(255,255,255,0.92)',
+          border: `2px solid ${COLORS.pinkPale}`,
+          boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
           fontFamily: FONT.sanJi,
-          fontSize: 21,
-          color: COLORS.textGray,
-          textAlign: 'center',
-          lineHeight: 1.55
+          fontSize: 24,
+          fontWeight: 700,
+          color: COLORS.textDark
         }}
       >
-        {text}
+        <Icon icon={ICONS.clock} size={26} color={COLORS.purple} />
+        从早到晚，她都在
       </div>
-    </RoundedCard>
+
+      {/* 时间轴线：随着她的陪伴一路走到晚安。 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 216,
+          top: 248,
+          width: 6,
+          height: 530,
+          borderRadius: 999,
+          background: `linear-gradient(180deg, ${COLORS.gold}, ${COLORS.pink}, ${COLORS.purple}, ${COLORS.blue})`,
+          opacity: railP * 0.35
+        }}
+      />
+      {TIMES.map((t, i) => (
+        <TimeNode key={i} {...t} y={215 + i * 130} />
+      ))}
+
+      {/* 助手空间：她的朋友们也可以换着陪伴阁下。 */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 200,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 18,
+          opacity: roomP
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            fontFamily: FONT.sanJi,
+            fontSize: 22,
+            fontWeight: 700,
+            color: COLORS.textGray
+          }}
+        >
+          <Icon icon={ICONS.house} size={24} color={COLORS.pinkDark} />
+          助手空间
+        </div>
+        {ASSISTANTS.map((a, i) => {
+          const p = usePop(frame, 235 + i * 18)
+          return (
+            <div
+              key={i}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '10px 20px',
+                borderRadius: 999,
+                background: '#fffafc',
+                border: `2px solid ${a.color}`,
+                fontFamily: FONT.sanJi,
+                fontSize: 22,
+                fontWeight: 700,
+                color: COLORS.textDark,
+                opacity: p,
+                transform: `translateY(${(1 - p) * 18}px)`
+              }}
+            >
+              <div
+                style={{
+                  width: 38,
+                  height: 38,
+                  borderRadius: '50%',
+                  background: a.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Icon icon={a.icon} size={20} color={COLORS.white} />
+              </div>
+              {a.name}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* 智乃本尊：陪着你从早到晚。 */}
+      <CharacterClip
+        name={DAY_ASSET.name}
+        durationInFrames={DAY_ASSET.durationInFrames}
+        voiceVolume={0.96}
+        style={{
+          right: -300,
+          top: -90,
+          width: 1300,
+          height: 1300
+        }}
+      />
+    </AbsoluteFill>
   )
 }

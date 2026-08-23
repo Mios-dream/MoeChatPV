@@ -2,210 +2,144 @@ import React from 'react'
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
 import { SceneBackground, usePop } from '../fx'
-import { RoundedCard, SceneTitle } from '../ui'
+import { ChatBubble, WindowFrame } from '../ui'
 import { Icon, ICONS } from '../icons'
+import { CharacterClip } from '../live2d/CharacterClip'
 
-const WaveBars: React.FC<{ bars?: number; color?: string; speed?: number }> = ({
-  bars = 26,
-  color = COLORS.pink,
-  speed = 0.3
-}) => {
-  const frame = useCurrentFrame()
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 5,
-        height: 90
-      }}
-    >
-      {Array.from({ length: bars }, (_, i) => {
-        const v =
-          Math.abs(Math.sin(i * 0.55 + frame * 0.16 * speed)) * 0.6 +
-          Math.abs(Math.sin(i * 0.23 + frame * 0.09 * speed)) * 0.4
-        return (
-          <div
-            key={i}
-            style={{
-              width: 9,
-              height: 12 + v * 70,
-              borderRadius: 5,
-              background: color,
-              opacity: 0.75 + v * 0.25
-            }}
-          />
-        )
-      })}
-    </div>
-  )
+// 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
+export const VOICE_ASSET = {
+  name: 'voice-listen',
+  durationInFrames: 308
 }
 
 export const VoiceScene: React.FC = () => {
   const frame = useCurrentFrame()
-  const recText = usePop(frame, 130)
-  const ttsText = usePop(frame, 170)
+  const noteP = usePop(frame, 150)
+  const micP = usePop(frame, 10)
+
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#fff1f6" to="#ffd9e6" sparkleSeed={77} />
-      <SceneTitle
-        delay={10}
-        sub="你开口，她把这件事接过去"
-        icon={<Icon icon={ICONS.micLines} size={54} color={COLORS.pinkDark} />}
-      >
-        一句话，智乃就记住了
-      </SceneTitle>
+      <SceneBackground from="#fffdfe" via="#fff1f6" to="#ffd9e6" sparkleSeed={77} petals />
 
+      {/* 场景内的小标签：像是对话中的状态提示，而不是章节标题。 */}
       <div
         style={{
           position: 'absolute',
-          top: 300,
-          width: '100%',
+          left: 150,
+          top: 96,
           display: 'flex',
-          justifyContent: 'center',
-          gap: 40
+          alignItems: 'center',
+          gap: 12,
+          padding: '12px 24px',
+          borderRadius: 999,
+          background: 'rgba(255,255,255,0.92)',
+          border: `2px solid ${COLORS.pinkPale}`,
+          boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
+          fontFamily: FONT.sanJi,
+          fontSize: 24,
+          fontWeight: 700,
+          color: COLORS.textDark,
+          opacity: micP
         }}
       >
-        <RoundedCard width={470} height={480} delay={40} pad={30}>
-          <Icon
-            icon={ICONS.micLines}
-            size={64}
-            color={COLORS.pinkDark}
-            style={{ marginBottom: 8 }}
-          />
-          <div
-            style={{
-              fontFamily: FONT.kaTong,
-              fontSize: 36,
-              color: COLORS.pinkDark,
-              marginBottom: 14
-            }}
-          >
-            你说，她听见
-          </div>
-          <WaveBars bars={22} />
-          <div
-            style={{
-              marginTop: 18,
-              fontSize: 27,
-              fontFamily: FONT.sanJi,
-              color: COLORS.textDark,
-              background: '#fff0f5',
-              padding: '12px 20px',
-              borderRadius: 16,
-              opacity: recText,
-              transform: `translateY(${(1 - recText) * 16}px)`
-            }}
-          >
-            “周六下午三点，提醒我吃火锅。”
-            <span style={{ color: COLORS.pinkDark, fontWeight: 700 }}>
-              <Icon icon={ICONS.check} size={22} color={COLORS.mint} /> 已识别
-            </span>
-          </div>
-        </RoundedCard>
+        <Icon icon={ICONS.micLines} size={26} color={COLORS.pinkDark} />
+        在桌边 · 听你说
+      </div>
 
-        <RoundedCard width={470} height={480} delay={70} pad={30}>
-          <Icon icon={ICONS.volume} size={64} color={COLORS.purple} style={{ marginBottom: 8 }} />
+      {/* 对话窗口：一次完整的「你说 → 她回 → 她记下」。 */}
+      <div style={{ position: 'absolute', left: 150, top: 250 }}>
+        <WindowFrame width={780} height={560} title="和智乃的对话" popDelay={24}>
           <div
             style={{
-              fontFamily: FONT.kaTong,
-              fontSize: 36,
-              color: COLORS.pinkDark,
-              marginBottom: 14
-            }}
-          >
-            她回你一句
-          </div>
-          <WaveBars bars={22} color={COLORS.purple} speed={0.45} />
-          <div
-            style={{
-              marginTop: 18,
-              fontSize: 27,
-              fontFamily: FONT.sanJi,
-              color: COLORS.textDark,
-              background: '#f3edff',
-              padding: '12px 20px',
-              borderRadius: 16,
-              opacity: ttsText,
-              transform: `translateY(${(1 - ttsText) * 16}px)`
-            }}
-          >
-            <Icon icon={ICONS.volume} size={24} color={COLORS.purple} /> 智乃：
-            <strong style={{ color: COLORS.purple }}>“记好啦，到时间叫你～”</strong>
-          </div>
-        </RoundedCard>
-
-        <RoundedCard width={470} height={480} delay={100} pad={30}>
-          <Icon icon={ICONS.listCheck} size={64} color={COLORS.pinkDark} style={{ marginBottom: 8 }} />
-          <div
-            style={{
-              fontFamily: FONT.kaTong,
-              fontSize: 36,
-              color: COLORS.pinkDark,
-              marginBottom: 18
-            }}
-          >
-            然后，她替你记下
-          </div>
-          <div
-            style={{
+              position: 'absolute',
+              inset: 0,
+              padding: '18px 0',
+              background: '#fff',
               display: 'flex',
-              width: '100%',
-              padding: '18px 20px',
-              borderRadius: 16,
-              background: '#fff0f5',
-              gap: 12,
-              flexDirection: 'column'
+              flexDirection: 'column',
+              justifyContent: 'center'
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontFamily: FONT.sanJi,
-                fontSize: 22,
-                color: COLORS.textGray
-              }}
-            >
-              <span>周六</span>
-              <span>15:00</span>
-            </div>
-            <div
-              style={{
-                fontFamily: FONT.sanJi,
-                fontSize: 28,
-                fontWeight: 700,
-                color: COLORS.textDark
-              }}
-            >
-              和朋友吃火锅
-            </div>
-            <div
+            <ChatBubble side="user" delay={40}>
+              周六下午三点，提醒我吃火锅。
+            </ChatBubble>
+            <ChatBubble side="assistant" delay={78}>
+              听见啦～周六的火锅，我已经记在待办里啦，到时间会叫阁下的！
+            </ChatBubble>
+          </div>
+        </WindowFrame>
+      </div>
+
+      {/* 她说「记好了」时，待办像她的笔记一样出现在手边。 */}
+      <div
+        style={{
+          position: 'absolute',
+          left: 300,
+          bottom: 195,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+          padding: '18px 28px',
+          borderRadius: 22,
+          background: 'rgba(255,255,255,0.95)',
+          border: `2px solid ${COLORS.pinkPale}`,
+          boxShadow: `0 16px 38px -14px ${COLORS.pinkShadow}`,
+          fontFamily: FONT.sanJi,
+          opacity: noteP,
+          transform: `translateY(${(1 - noteP) * 24}px) scale(${0.88 + 0.12 * noteP})`
+        }}
+      >
+        <Icon icon={ICONS.noteSticky} size={34} color={COLORS.pinkDark} />
+        <div>
+          <div
+            style={{
+              fontSize: 22,
+              color: COLORS.textGray,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 14
+            }}
+          >
+            <span>周六</span>
+            <span>15:00</span>
+            <span
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 8,
-                fontFamily: FONT.sanJi,
-                fontSize: 22,
-                fontWeight: 700,
-                color: COLORS.mint
+                gap: 6,
+                color: COLORS.mint,
+                fontWeight: 700
               }}
             >
-              <Icon icon={ICONS.check} size={22} color={COLORS.mint} /> 已加入待办
-            </div>
+              <Icon icon={ICONS.check} size={20} color={COLORS.mint} />
+              已加入待办
+            </span>
           </div>
           <div
             style={{
-              marginTop: 16,
-              fontSize: 22,
-              color: COLORS.textGray,
-              fontFamily: FONT.sanJi
+              fontSize: 27,
+              fontWeight: 700,
+              color: COLORS.textDark,
+              marginTop: 2
             }}
           >
-            <Icon icon={ICONS.smile} size={24} color={COLORS.pinkDark} /> 她笑着点点头
+            和朋友吃火锅
           </div>
-        </RoundedCard>
+        </div>
       </div>
+
+      {/* 智乃本尊：听见、回应、点头。 */}
+      <CharacterClip
+        name={VOICE_ASSET.name}
+        durationInFrames={VOICE_ASSET.durationInFrames}
+        voiceVolume={0.96}
+        style={{
+          right: -280,
+          top: -80,
+          width: 1280,
+          height: 1280
+        }}
+      />
     </AbsoluteFill>
   )
 }

@@ -3,8 +3,6 @@ import { AbsoluteFill, Sequence, interpolate, staticFile, useVideoConfig } from 
 import { Audio } from '@remotion/media'
 import { TransitionSeries, linearTiming } from '@remotion/transitions'
 import { fade } from '@remotion/transitions/fade'
-import { slide } from '@remotion/transitions/slide'
-import { wipe } from '@remotion/transitions/wipe'
 import { SubtitleLayer } from './subtitles'
 import { SceneBackground } from './fx'
 import { Opening } from './scenes/Opening'
@@ -22,12 +20,12 @@ import { Outro } from './scenes/Outro'
 export const SCENE_DURATIONS = {
   opening: 270,
   hero: 750,
-  voice: 330,
+  voice: 345,
   scenes: 375,
-  desktop: 300,
-  perf: 195,
-  gallery: 240,
-  install: 495,
+  desktop: 315,
+  perf: 225,
+  gallery: 270,
+  install: 420,
   outro: 420
 }
 
@@ -120,52 +118,49 @@ export const MoeChatPV: React.FC = () => {
             </Sequence>
           </AbsoluteFill>
         </TransitionSeries.Sequence>
-        {/* Live2D 主展示 -> 语音功能：从左侧滑入。 */}
-        <TransitionSeries.Transition presentation={slide({ direction: 'from-left' })} timing={t} />
+        {/* Live2D 主展示 -> 语音时刻：淡入淡出。 */}
+        <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 3. 语音交互演示。 */}
+        {/* 3. 你开口，她就听见。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.voice}>
           <VoiceScene />
         </TransitionSeries.Sequence>
-        {/* 语音功能 -> 日常场景：从下方滑入。 */}
-        <TransitionSeries.Transition
-          presentation={slide({ direction: 'from-bottom' })}
-          timing={t}
-        />
+        {/* 语音时刻 -> 日常陪伴：淡入淡出。 */}
+        <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 4. 日常陪伴场景。 */}
+        {/* 4. 从早到晚，她都在。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.scenes}>
           <ScenesScene />
         </TransitionSeries.Sequence>
-        {/* 日常场景 -> 桌面视图：淡入淡出。 */}
+        {/* 日常陪伴 -> 桌边小窝：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 5. 桌面应用总览。 */}
+        {/* 5. 桌边小窝。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.desktop}>
           <DesktopScene />
         </TransitionSeries.Sequence>
-        {/* 桌面视图 -> 性能展示：从右侧滑入。 */}
-        <TransitionSeries.Transition presentation={slide({ direction: 'from-right' })} timing={t} />
+        {/* 桌边小窝 -> 安静时刻：淡入淡出。 */}
+        <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 6. 性能与低占用展示。 */}
+        {/* 6. 你忙的时候，她安静下来。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.perf}>
           <PerfScene />
         </TransitionSeries.Sequence>
-        {/* 性能展示 -> 角色画廊：从左至右擦除。 */}
-        <TransitionSeries.Transition presentation={wipe({ direction: 'from-left' })} timing={t} />
+        {/* 安静时刻 -> 她的日记本：淡入淡出。 */}
+        <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 7. 角色画廊。 */}
+        {/* 7. 她的日记本。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.gallery}>
           <GalleryScene />
         </TransitionSeries.Sequence>
-        {/* 角色画廊 -> 安装引导：淡入淡出。 */}
+        {/* 她的日记本 -> 把她带回家：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 8. 安装与开始使用。 */}
+        {/* 8. 把她带回家。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.install}>
           <InstallScene />
         </TransitionSeries.Sequence>
-        {/* 安装引导 -> 结尾：淡入淡出。 */}
+        {/* 把她带回家 -> 结尾：淡入淡出。 */}
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
         {/* 9. 结尾页。 */}

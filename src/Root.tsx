@@ -10,7 +10,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="MoeChatPV"
         component={MoeChatPV}
-        durationInFrames={3255}
+        durationInFrames={3270}
         fps={30}
         width={1920}
         height={1080}

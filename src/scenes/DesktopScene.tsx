@@ -3,8 +3,15 @@ import { AbsoluteFill, staticFile, useCurrentFrame } from 'remotion'
 import { Video } from '@remotion/media'
 import { COLORS, FONT } from '../theme'
 import { SceneBackground, usePop } from '../fx'
-import { FeatureChip, SceneTitle, WindowFrame } from '../ui'
+import { WindowFrame } from '../ui'
 import { Icon, ICONS } from '../icons'
+import { CharacterClip } from '../live2d/CharacterClip'
+
+// 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
+export const NEST_ASSET = {
+  name: 'desktop-nest',
+  durationInFrames: 336
+}
 
 const WIDGETS = [
   { icon: ICONS.clock, label: '时钟日历' },
@@ -14,53 +21,49 @@ const WIDGETS = [
   { icon: ICONS.noteSticky, label: '便签' }
 ]
 
+const TAGS = [
+  { icon: ICONS.drag, label: '可拖动', delay: 130 },
+  { icon: ICONS.ghost, label: '点击穿透', delay: 156 },
+  { icon: ICONS.toolbox, label: '浮动工具栏', delay: 182 }
+]
+
 export const DesktopScene: React.FC = () => {
   const frame = useCurrentFrame()
+  const tagP = usePop(frame, 110)
+
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#ffeef4" to="#ffd9e4" sparkleSeed={29} />
-      <SceneTitle
-        delay={8}
-        sub="她待在桌边，空白留给你"
-        icon={<Icon icon={ICONS.laptop} size={54} color={COLORS.pinkDark} />}
-      >
-        把智乃放在你看得见的地方
-      </SceneTitle>
+      <SceneBackground from="#fffdfe" via="#ffeef4" to="#ffd9e4" sparkleSeed={29} petals />
 
+      {/* 场景内的小标签：她的小窝。 */}
       <div
         style={{
           position: 'absolute',
-          top: 235,
-          width: '100%',
+          left: 150,
+          top: 96,
           display: 'flex',
-          justifyContent: 'center',
-          gap: 22
+          alignItems: 'center',
+          gap: 12,
+          padding: '12px 24px',
+          borderRadius: 999,
+          background: 'rgba(255,255,255,0.92)',
+          border: `2px solid ${COLORS.pinkPale}`,
+          boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
+          fontFamily: FONT.sanJi,
+          fontSize: 24,
+          fontWeight: 700,
+          color: COLORS.textDark
         }}
       >
-        <FeatureChip
-          label="拖动定位"
-          icon={<Icon icon={ICONS.drag} size={26} color={COLORS.pink} />}
-          delay={40}
-          size={24}
-        />
-        <FeatureChip
-          label="点击穿透"
-          icon={<Icon icon={ICONS.ghost} size={26} color={COLORS.pink} />}
-          delay={62}
-          size={24}
-        />
-        <FeatureChip
-          label="浮动工具栏"
-          icon={<Icon icon={ICONS.toolbox} size={26} color={COLORS.pink} />}
-          delay={84}
-          size={24}
-        />
+        <Icon icon={ICONS.laptop} size={26} color={COLORS.pinkDark} />
+        桌边的小窝
       </div>
 
-      <div style={{ position: 'absolute', left: 210, top: 335 }}>
-        <WindowFrame width={640} height={420} title="待办列表" popDelay={90}>
+      {/* 桌宠形态实机：她真的住在桌面角落。 */}
+      <div style={{ position: 'absolute', left: 150, top: 240 }}>
+        <WindowFrame width={660} height={430} title="桌宠形态" popDelay={30}>
           <Video
-            src={staticFile('video/clips/todo.mp4')}
+            src={staticFile('video/clips/pet.mp4')}
             muted
             style={{
               position: 'absolute',
@@ -74,35 +77,19 @@ export const DesktopScene: React.FC = () => {
         </WindowFrame>
       </div>
 
-      <div style={{ position: 'absolute', right: 210, top: 335 }}>
-        <WindowFrame width={640} height={420} title="天气查询" popDelay={110}>
-          <Video
-            src={staticFile('video/clips/weather.mp4')}
-            muted
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              background: '#fff'
-            }}
-          />
-        </WindowFrame>
-      </div>
-
+      {/* 她的小摆件：贴着桌面的一圈小组件。 */}
       <div
         style={{
           position: 'absolute',
-          bottom: 108,
+          bottom: 200,
           width: '100%',
           display: 'flex',
           justifyContent: 'center',
-          gap: 22
+          gap: 20
         }}
       >
         {WIDGETS.map((w, i) => {
-          const p = usePop(frame, 170 + i * 16)
+          const p = usePop(frame, 165 + i * 14)
           return (
             <div
               key={i}
@@ -110,21 +97,75 @@ export const DesktopScene: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
-                padding: '13px 24px',
+                padding: '12px 22px',
                 borderRadius: 999,
                 background: 'rgba(255,255,255,0.94)',
                 border: `2px solid ${COLORS.pinkPale}`,
                 boxShadow: `0 12px 28px -12px ${COLORS.pinkShadow}`,
                 fontFamily: FONT.sanJi,
-                fontSize: 24,
+                fontSize: 22,
                 fontWeight: 700,
                 color: COLORS.textDark,
                 opacity: p,
-                transform: `translateY(${(1 - p) * 22}px)`
+                transform: `translateY(${(1 - p) * 20}px)`
               }}
             >
-              <Icon icon={w.icon} size={28} color={COLORS.pinkDark} />
+              <Icon icon={w.icon} size={26} color={COLORS.pinkDark} />
               {w.label}
+            </div>
+          )
+        })}
+      </div>
+
+      {/* 智乃本尊：住在桌面角落，不挡阁下干活。 */}
+      <CharacterClip
+        name={NEST_ASSET.name}
+        durationInFrames={NEST_ASSET.durationInFrames}
+        voiceVolume={0.96}
+        style={{
+          right: -300,
+          top: -80,
+          width: 1320,
+          height: 1320
+        }}
+      />
+
+      {/* 她的小标签：像贴在身边的功能牌，简短、不抢戏。 */}
+      <div
+        style={{
+          position: 'absolute',
+          right: 690,
+          top: 320,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 14,
+          opacity: tagP
+        }}
+      >
+        {TAGS.map((t, i) => {
+          const p = usePop(frame, t.delay)
+          return (
+            <div
+              key={i}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '11px 20px',
+                borderRadius: 999,
+                background: 'rgba(255,255,255,0.94)',
+                border: `2px solid ${COLORS.pinkPale}`,
+                boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
+                fontFamily: FONT.sanJi,
+                fontSize: 22,
+                fontWeight: 700,
+                color: COLORS.textDark,
+                opacity: p,
+                transform: `translateX(${(1 - p) * 18}px)`
+              }}
+            >
+              <Icon icon={t.icon} size={24} color={COLORS.pink} />
+              {t.label}
             </div>
           )
         })}
