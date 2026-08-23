@@ -1,6 +1,7 @@
 import React from 'react'
-import { AbsoluteFill, Audio, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
+import { AbsoluteFill, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 import { GeneratedMotion, Live2DStage } from './Live2DStage'
+import { Audio } from '@remotion/media'
 
 export type Live2DAssetProps = {
   durationInFrames: number
@@ -22,13 +23,13 @@ export const Live2DAsset: React.FC<Live2DAssetProps> = ({
   background = 'transparent'
 }) => {
   const frame = useCurrentFrame()
-  const { fps } = useVideoConfig()
+  const { fps, width, height } = useVideoConfig()
 
   return (
     <AbsoluteFill style={{ background: background === 'chroma' ? '#00ff00' : 'transparent' }}>
       <Live2DStage
-        width={1024}
-        height={1024}
+        width={width}
+        height={height}
         targetTime={frame / fps}
         motion={motion}
         mouthCues={mouthCues}

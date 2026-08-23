@@ -21,8 +21,8 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={LIVE2D_ASSET_DEFAULT_PROPS}
         durationInFrames={600}
         fps={30}
-        width={1024}
-        height={1024}
+        width={3840}
+        height={3840}
         calculateMetadata={({ props }) => ({
           durationInFrames: Math.max(1, Math.floor(props.durationInFrames)),
         })}

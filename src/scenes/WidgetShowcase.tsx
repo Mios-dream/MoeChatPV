@@ -129,19 +129,19 @@ export const WidgetShowcase: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          left: 110,
-          top: 82,
+          left: 50,
+          top: 72,
           display: 'flex',
           alignItems: 'center',
           gap: 16,
           opacity: titleP
         }}
       >
-        <Icon icon={ICONS.wand} size={38} color={COLORS.gold} />
+        <Icon icon={ICONS.wand} size={40} color={COLORS.gold} />
         <div
           style={{
             fontFamily: FONT.kaTong,
-            fontSize: 48,
+            fontSize: 50,
             color: COLORS.pinkDark,
             letterSpacing: 2,
             textShadow: `0 6px 24px ${COLORS.pinkShadow}`

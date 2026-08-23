@@ -1,5 +1,6 @@
 node_modules
 out
 .npm-cache
+.remotion-binaries
 media-original
 public

@@ -303,6 +303,7 @@ const renderArgs = [
   '--props',
   propsPath,
   '--concurrency=1',
+  '--gl=angle',
   background === 'transparent' ? '--codec=vp9' : '--codec=h264',
   background === 'transparent' ? '--image-format=png' : '--image-format=jpeg',
   background === 'transparent' ? '--pixel-format=yuva420p' : '--pixel-format=yuv420p'
@@ -316,3 +317,43 @@ if (result.status !== 0) {
 }
 
 console.log(`Created ${path.relative(root, outputPath)}`)
+
+// 透明主素材完成后自动生成轻量预览副本（character-preview.webm，默认 1280×1280），
+// 供 Remotion Studio 预览使用。透明视频带 Alpha 通道只能软件解码，
+// 4K 版会让浏览器预览卡顿甚至黑屏，代理素材是常规做法，无需手动另生成。
+if (background === 'transparent') {
+  const previewSize = Math.max(2, Math.round(Number(takeValue('--preview-size', '1280'))))
+  const previewPath = path.join(assetDir, 'character-preview.webm')
+  const previewResult = spawnSync(
+    'ffmpeg',
+    [
+      '-y',
+      // 用 libvpx 解码器读取主素材：ffmpeg 默认的 vp9 解码器会丢弃 alpha 通道，
+      // 导致预览副本变成不透明黑底。
+      '-c:v',
+      'libvpx-vp9',
+      '-i',
+      outputPath,
+      '-vf',
+      `scale=${previewSize}:${previewSize}:flags=lanczos`,
+      '-c:v',
+      'libvpx-vp9',
+      '-b:v',
+      '0',
+      '-crf',
+      '34',
+      '-pix_fmt',
+      'yuva420p',
+      '-an',
+      '-cpu-used',
+      '4',
+      previewPath
+    ],
+    { cwd: root, stdio: 'inherit' }
+  )
+  if (previewResult.status === 0) {
+    console.log(`Created ${path.relative(root, previewPath)}`)
+  } else {
+    console.warn('Preview proxy generation failed; the 4K master is still valid.')
+  }
+}

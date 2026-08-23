@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteFill, Sequence, staticFile, useCurrentFrame } from 'remotion'
+import { AbsoluteFill, Sequence, interpolate, staticFile, useCurrentFrame } from 'remotion'
 import { Video } from '@remotion/media'
 import { COLORS, FONT } from '../theme'
 import { StripedStage, usePop } from '../fx'
@@ -30,9 +30,28 @@ const STATUS = [
   { icon: ICONS.heartPulse, label: '服务状态', delay: 194 }
 ]
 
+const TAB_DURATIONS = [130, 160]
+const TAB_FADE = 8
+
+const tabVideoOpacity = (frame: number, index: number): number => {
+  const start = TABS[index].start
+  const duration = TAB_DURATIONS[index]
+  const local = frame - start
+  const inP = interpolate(local, [0, TAB_FADE], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp'
+  })
+  const outP = interpolate(local, [duration - TAB_FADE, duration], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp'
+  })
+  return Math.max(0, Math.min(inP, outP))
+}
+
 export const GalleryScene: React.FC = () => {
   const frame = useCurrentFrame()
   const active = frame < TABS[1].start ? 0 : 1
+  const tabP = usePop(frame, TABS[1].start)
 
   return (
     <AbsoluteFill>
@@ -86,6 +105,9 @@ export const GalleryScene: React.FC = () => {
             >
               {TABS.map((t, i) => {
                 const isActive = i === active
+                const activeScale = isActive
+                  ? `scale(${0.94 + 0.06 * (i === 0 ? 1 : tabP)})`
+                  : undefined
                 return (
                   <div
                     key={i}
@@ -102,7 +124,8 @@ export const GalleryScene: React.FC = () => {
                       background: isActive
                         ? `linear-gradient(135deg, ${COLORS.pink}, ${COLORS.pinkDark})`
                         : 'rgba(255,255,255,0.9)',
-                      border: `2px solid ${isActive ? 'transparent' : COLORS.pinkPale}`
+                      border: `2px solid ${isActive ? 'transparent' : COLORS.pinkPale}`,
+                      transform: activeScale
                     }}
                   >
                     <Icon
@@ -117,18 +140,26 @@ export const GalleryScene: React.FC = () => {
             </div>
             <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
               {TABS.map((t, i) => (
-                <Sequence key={t.label} from={t.start} durationInFrames={i === 0 ? 130 : 160}>
-                  <Video
-                    src={staticFile(t.src)}
-                    muted
+                <Sequence key={t.label} from={t.start} durationInFrames={TAB_DURATIONS[i]}>
+                  <div
                     style={{
                       position: 'absolute',
                       inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
+                      opacity: tabVideoOpacity(frame, i)
                     }}
-                  />
+                  >
+                    <Video
+                      src={staticFile(t.src)}
+                      muted
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  </div>
                 </Sequence>
               ))}
             </div>

@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "remotion studio",
     "still": "remotion still",
-    "render": "remotion render MoeChatPV out/moechat-pv.mp4",
-    "render:preview": "remotion render MoeChatPV out/moechat-pv-preview.mp4 --scale=0.5",
+    "render": "remotion render MoeChatPV out/moechat-pv.mp4 --gl=angle --hardware-acceleration if-possible --video-bitrate 8M",
+    "render:preview": "remotion render MoeChatPV out/moechat-pv-preview.mp4 --scale=0.5 --gl=angle --hardware-acceleration if-possible --video-bitrate 4M",
     "live2d:asset": "node scripts/create-live2d-asset.mjs"
   },
   "dependencies": {

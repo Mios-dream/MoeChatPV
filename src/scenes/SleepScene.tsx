@@ -70,28 +70,29 @@ export const SleepScene: React.FC = () => {
     <AbsoluteFill>
       <StripedStage />
 
-      {/* 场景内的小标签：睡眠模式。 */}
+      {/* 章节标题：低占用模式（与「聊天展示 / 她住进桌面以后」同款设计）。 */}
       <div
         style={{
           position: 'absolute',
-          left: 150,
-          top: 96,
+          left: 50,
+          top: 72,
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
-          padding: '12px 24px',
-          borderRadius: 999,
-          background: 'rgba(255,255,255,0.92)',
-          border: `2px solid ${COLORS.pinkPale}`,
-          boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
-          fontFamily: FONT.sanJi,
-          fontSize: 24,
-          fontWeight: 700,
-          color: COLORS.textDark
+          gap: 16
         }}
       >
-        <Icon icon={ICONS.moon} size={26} color={COLORS.purple} />
-        睡眠模式
+        <Icon icon={ICONS.battery} size={40} color={COLORS.gold} />
+        <div
+          style={{
+            fontFamily: FONT.kaTong,
+            fontSize: 50,
+            color: COLORS.pinkDark,
+            letterSpacing: 2,
+            textShadow: `0 6px 24px ${COLORS.pinkShadow}`
+          }}
+        >
+          低占用模式
+        </div>
       </div>
 
       {/* 月光 + 睡意氛围，陪在她身边。 */}
