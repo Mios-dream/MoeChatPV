@@ -1,9 +1,11 @@
 import React from 'react'
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { StripedStage, usePop } from '../fx'
+import { FeatureStageBackdrop, usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
+import { UPPER_BODY_ZOOM } from '../live2d/characterFraming'
+import { DayTimeline } from './ScenesScene'
 
 // 由 scripts/create-live2d-asset.mjs 生成（--sleep），时长以 source.json 为准。
 export const SLEEP_ASSET = {
@@ -61,6 +63,8 @@ const Meter: React.FC<{
 
 export const SleepScene: React.FC = () => {
   const frame = useCurrentFrame()
+  const titleP = usePop(frame, 8)
+  const characterP = usePop(frame, 36, 36)
   const zP = interpolate(frame, [80, 150], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
@@ -68,9 +72,8 @@ export const SleepScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <StripedStage />
+      <FeatureStageBackdrop />
 
-      {/* 章节标题：低占用模式（与「聊天展示 / 她住进桌面以后」同款设计）。 */}
       <div
         style={{
           position: 'absolute',
@@ -78,10 +81,12 @@ export const SleepScene: React.FC = () => {
           top: 72,
           display: 'flex',
           alignItems: 'center',
-          gap: 16
+          gap: 16,
+          opacity: titleP,
+          transform: `translateY(${(1 - titleP) * -20}px)`
         }}
       >
-        <Icon icon={ICONS.battery} size={40} color={COLORS.gold} />
+        <Icon icon={ICONS.clock} size={40} color={COLORS.gold} />
         <div
           style={{
             fontFamily: FONT.kaTong,
@@ -91,16 +96,17 @@ export const SleepScene: React.FC = () => {
             textShadow: `0 6px 24px ${COLORS.pinkShadow}`
           }}
         >
-          低占用模式
+          全天陪伴
         </div>
       </div>
+      <DayTimeline showTitle={false} />
 
       {/* 月光 + 睡意氛围，陪在她身边。 */}
       <div
         style={{
           position: 'absolute',
-          left: 220,
-          top: 240,
+          left: 1420,
+          top: 220,
           width: 220,
           height: 220,
           borderRadius: '50%',
@@ -110,24 +116,24 @@ export const SleepScene: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          left: 270,
-          top: 300,
+          left: 1460,
+          top: 250,
           fontFamily: FONT.kaTong,
           fontSize: 64,
           color: COLORS.purple,
           opacity: zP,
           transform: `translateY(${(1 - zP) * 20}px)`,
-          letterSpacing: 8
+          letterSpacing: 8,
+          zIndex: 12
         }}
       >
-        z Z
+        z Z z
       </div>
 
-      {/* 低占用数据退到角落：睡眠模式 = 她安静地休息。 */}
-      <div
+      {/* <div
         style={{
           position: 'absolute',
-          left: 820,
+          left: 1420,
           bottom: 200,
           width: 440,
           padding: '24px 30px',
@@ -183,18 +189,22 @@ export const SleepScene: React.FC = () => {
           <Icon icon={ICONS.brain} size={18} color={COLORS.purple} />
           R7 7735H 实测 · 睡眠时自动收起部分模型
         </div>
-      </div>
+      </div> */}
 
-      {/* 智乃本尊：闭眼小憩，被叫到时半睁着眼回答。 */}
+      {/* 智乃本尊：向右避开日程内容，睡意状态柔和进入画面。 */}
       <CharacterClip
         name={SLEEP_ASSET.name}
         durationInFrames={SLEEP_ASSET.durationInFrames}
         voiceVolume={0.96}
+        zoom={UPPER_BODY_ZOOM}
+        fadeIn={18}
         style={{
-          right: -300,
-          top: -100,
-          width: 1320,
-          height: 1320
+          left: 550,
+          top: 0,
+          width: 1100,
+          height: 1100,
+          zIndex: 10,
+          transform: `translateX(${(1 - characterP) * 74}px)`
         }}
       />
     </AbsoluteFill>

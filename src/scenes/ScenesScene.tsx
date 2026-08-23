@@ -12,48 +12,42 @@ export const DAY_ASSET = {
   durationInFrames: 308
 }
 
-const TIMES = [
+export const TIMES = [
   {
     clock: '06:00',
     label: '早安',
     icon: ICONS.sun as IconDefinition,
     color: COLORS.gold,
-    line: '早、早啊，笨蛋哥哥……今天也要元气满满哦！',
+    line: '早、早啊，笨蛋哥哥……今天有好好吃早饭吗？',
     delay: 20
   },
   {
     clock: '12:00',
-    label: '白天',
+    label: '午安',
     icon: ICONS.cloudSun as IconDefinition,
     color: COLORS.pink,
-    line: '想聊什么，我都听着呢～',
+    line: '午安，哥哥！吃饱了吗？陪我聊会儿吧～',
     delay: 55
   },
   {
-    clock: '23:00',
-    label: '深夜',
+    clock: '20:00',
+    label: '夜幕',
     icon: ICONS.moon as IconDefinition,
     color: COLORS.purple,
-    line: '吐槽大会，现在开始！',
+    line: '夜幕降临啦，今天也辛苦了！和我聊聊吧～',
     delay: 90
   },
   {
-    clock: '24:00',
+    clock: '22:00',
     label: '晚安',
-    icon: ICONS.star as IconDefinition,
+    icon: ICONS.moon as IconDefinition,
     color: COLORS.blue,
     line: '晚安，笨蛋哥哥……才不是舍不得你呢！',
     delay: 125
   }
 ]
 
-const ASSISTANTS = [
-  { icon: ICONS.paw, name: '元气小鹿', color: '#ffb3c6' },
-  { icon: ICONS.dove, name: '温柔兔兔', color: '#c9a7f5' },
-  { icon: ICONS.cat, name: '毒舌猫猫', color: '#8fc8f0' }
-]
-
-const TimeNode: React.FC<{
+export const TimeNode: React.FC<{
   clock: string
   label: string
   icon: IconDefinition
@@ -74,6 +68,7 @@ const TimeNode: React.FC<{
         display: 'flex',
         alignItems: 'center',
         gap: 20,
+        zIndex: 2,
         opacity: p,
         transform: `translateY(${(1 - p) * 26}px)`
       }}
@@ -145,14 +140,70 @@ const TimeNode: React.FC<{
   )
 }
 
+/** 时间轴卡片，可嵌入全天陪伴段，展示一天中的关键问候。 */
+export const DayTimeline: React.FC<{ title?: string; showTitle?: boolean }> = ({
+  title = '从早到晚，她都在',
+  showTitle = true
+}) => {
+  const frame = useCurrentFrame()
+  const railP = interpolate(frame, [10, 160], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp'
+  })
+
+  return (
+    <>
+      {showTitle ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: 150,
+            top: 96,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            padding: '12px 24px',
+            borderRadius: 999,
+            background: 'rgba(255,255,255,0.92)',
+            border: `2px solid ${COLORS.pinkPale}`,
+            boxShadow: `0 10px 24px -10px ${COLORS.pinkShadow}`,
+            fontFamily: FONT.sanJi,
+            fontSize: 24,
+            fontWeight: 700,
+            color: COLORS.textDark,
+            zIndex: 2
+          }}
+        >
+          <Icon icon={ICONS.clock} size={26} color={COLORS.purple} />
+          {title}
+        </div>
+      ) : null}
+      <div
+        style={{
+          position: 'absolute',
+          left: 216,
+          top: 248,
+          width: 6,
+          height: 530,
+          borderRadius: 999,
+          background: `linear-gradient(180deg, ${COLORS.gold}, ${COLORS.pink}, ${COLORS.purple}, ${COLORS.blue})`,
+          zIndex: 2,
+          opacity: railP * 0.35
+        }}
+      />
+      {TIMES.map((t, i) => (
+        <TimeNode key={i} {...t} y={215 + i * 130} />
+      ))}
+    </>
+  )
+}
+
 export const ScenesScene: React.FC = () => {
   const frame = useCurrentFrame()
   const railP = interpolate(frame, [10, 160], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
-  const roomP = usePop(frame, 215)
-
   return (
     <AbsoluteFill>
       <StripedStage />

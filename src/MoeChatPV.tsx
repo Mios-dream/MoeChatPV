@@ -8,7 +8,6 @@ import { StripedStage } from './fx'
 import { Opening } from './scenes/Opening'
 import { Live2DCharacterShowcase, SHOWCASE_DURATION } from './scenes/Live2DCharacterShowcase'
 import { CHAT_SCENE_DURATION, VoiceScene } from './scenes/VoiceScene'
-import { ScenesScene } from './scenes/ScenesScene'
 import { SleepScene } from './scenes/SleepScene'
 import { GalleryScene } from './scenes/GalleryScene'
 import { WidgetShowcase } from './scenes/WidgetShowcase'
@@ -20,10 +19,9 @@ export const SCENE_DURATIONS = {
   opening: 270,
   hero: 375,
   chat: CHAT_SCENE_DURATION,
-  scenarios: 375,
-  sleep: 360,
+  widgetService: 420,
+  sleep: 560,
   diary: 270,
-  widgets: 420,
   install: 420,
   outro: 420
 }
@@ -70,43 +68,37 @@ export const MoeChatPV: React.FC = () => {
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 3. 聊天展示：头部特写 + 多条符合人设的日常回复轮播。 */}
+        {/* 3. 日常交互：摸摸头回应。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.chat}>
           <VoiceScene />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 4. 聊天情景：从早到晚的早安、晚安。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.scenarios}>
-          <ScenesScene />
+        {/* 4. 小组件服务：天气角色与桌面小组件。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.widgetService}>
+          <WidgetShowcase />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 5. 睡眠模式：Live2D 真实睡眠状态（闭眼小憩 / 半醒回答）。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.sleep}>
-          <SleepScene />
-        </TransitionSeries.Sequence>
-        <TransitionSeries.Transition presentation={fade()} timing={t} />
-
-        {/* 6. 她的日记本。 */}
+        {/* 5. 日记分享：只展示角色的日记内容。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.diary}>
           <GalleryScene />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 7. 功能演示：纯小组件演示（时钟 / 天气 / 每日一句 / 任务板 / 便签）。 */}
-        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.widgets}>
-          <WidgetShowcase />
+        {/* 6. 日常陪伴：日程时间轴与 Live2D 睡眠状态融合展示。 */}
+        <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.sleep}>
+          <SleepScene />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 8. 把她带回家。 */}
+        {/* 7. 把她带回家。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.install}>
           <InstallScene />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={t} />
 
-        {/* 9. 结尾页。 */}
+        {/* 8. 结尾页。 */}
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.outro}>
           <Outro />
         </TransitionSeries.Sequence>

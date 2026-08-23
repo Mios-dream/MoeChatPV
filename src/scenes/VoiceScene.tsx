@@ -1,13 +1,13 @@
 import React from 'react'
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { RotatingFlower, StripedStage, usePop } from '../fx'
+import { FeatureStageBackdrop, usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
+import { UPPER_BODY_ZOOM } from '../live2d/characterFraming'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
-// 三条风格化回复，按顺序轮播；相邻回复重叠 12 帧做交叉淡入淡出，
-// 左侧情景标签也随回复一起平滑切换，避免生硬的跳变。
+// 日常交互段只展示摸摸头回应；天气和睡眠分别在后续专属板块呈现。
 // 素材由 scripts/create-live2d-asset.mjs 生成，时长以 source.json 为准。
 const REPLY_FADE = 12
 
@@ -18,20 +18,6 @@ export const CHAT_REPLIES = [
     asset: 'chat-reply-1',
     durationInFrames: 221,
     start: 10
-  },
-  {
-    category: '天气提醒',
-    categoryIcon: ICONS.cloudSun as IconDefinition,
-    asset: 'chat-reply-2',
-    durationInFrames: 220,
-    start: 219
-  },
-  {
-    category: '睡眠模式',
-    categoryIcon: ICONS.moon as IconDefinition,
-    asset: 'chat-reply-3',
-    durationInFrames: 284,
-    start: 427
   }
 ]
 
@@ -39,8 +25,6 @@ export const CHAT_SCENE_DURATION =
   CHAT_REPLIES[CHAT_REPLIES.length - 1].start +
   CHAT_REPLIES[CHAT_REPLIES.length - 1].durationInFrames +
   36
-
-const HEAD_ZOOM = { scale: 2.0, focusX: 0.5, focusY: 0.27 }
 
 const replyOpacity = (
   frame: number,
@@ -67,9 +51,9 @@ export const VoiceScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <StripedStage />
+      <FeatureStageBackdrop />
 
-      {/* 左上角标题：与「她住进桌面以后」同款设计。 */}
+      {/* 左上角标题：与其他功能段保持一致。 */}
       <div
         style={{
           position: 'absolute',
@@ -92,11 +76,11 @@ export const VoiceScene: React.FC = () => {
             textShadow: `0 6px 24px ${COLORS.pinkShadow}`
           }}
         >
-          聊天展示
+          日常交互
         </div>
       </div>
 
-      {/* 左侧：当前类别的标签；切换时旧标签淡出、新标签淡入。 */}
+      {/* 左侧：当前交互类别。 */}
       <div
         style={{
           position: 'absolute',
@@ -146,12 +130,6 @@ export const VoiceScene: React.FC = () => {
         })}
       </div>
 
-      {/* 与前面环节一致的旋转花朵点缀。 */}
-      <RotatingFlower left={170} top={210} size={118} opacity={0.58} offset={12} />
-      <RotatingFlower left={1780} top={230} size={84} opacity={0.5} offset={72} />
-      <RotatingFlower left={180} top={880} size={78} opacity={0.48} offset={210} />
-      <RotatingFlower left={1740} top={860} size={142} opacity={0.56} offset={148} />
-
       {/* 角色头部特写：画面中心，逐条回应，展示表情与口型。 */}
       {CHAT_REPLIES.map((r, i) => (
         <CharacterClip
@@ -160,7 +138,7 @@ export const VoiceScene: React.FC = () => {
           durationInFrames={r.durationInFrames}
           start={r.start}
           voiceVolume={0.96}
-          zoom={HEAD_ZOOM}
+          zoom={UPPER_BODY_ZOOM}
           fadeIn={REPLY_FADE}
           fadeOut={REPLY_FADE}
           style={{

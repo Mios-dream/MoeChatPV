@@ -18,7 +18,12 @@ const STEPS = [
   { icon: ICONS.download, title: '来接她吧', desc: '下载整合包，一键搞定' },
   { icon: ICONS.folder, title: '给她安个家', desc: '解压到本地，免安装' },
   { icon: ICONS.rocket, title: '她住进桌面', desc: '打开 MoeChat，Windows / Linux 都行' },
-  { icon: ICONS.handSparkles, title: '初次见面～', desc: '你好呀，哥哥，我等你好久啦', mascot: true }
+  {
+    icon: ICONS.handSparkles,
+    title: '初次见面～',
+    desc: '你好呀，哥哥，我等你好久啦',
+    mascot: true
+  }
 ]
 
 export const InstallScene: React.FC = () => {
@@ -28,7 +33,6 @@ export const InstallScene: React.FC = () => {
     extrapolateRight: 'clamp'
   })
   const meetP = usePop(frame, 260)
-  const noteP = usePop(frame, 320)
 
   return (
     <AbsoluteFill>
@@ -83,53 +87,6 @@ export const InstallScene: React.FC = () => {
           }}
         >
           欢迎回家，哥哥！
-        </div>
-      </div>
-
-      {/* 开源信息：保留，但安静地待在角落。 */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 190,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 22,
-            opacity: noteP,
-            transform: `translateY(${(1 - noteP) * 18}px)`,
-            padding: '16px 32px',
-            borderRadius: 999,
-            background: 'rgba(255,255,255,0.92)',
-            border: `2px solid ${COLORS.pinkPale}`,
-            boxShadow: `0 14px 34px -14px ${COLORS.pinkShadow}`,
-            fontFamily: FONT.sanJi,
-            fontSize: 22,
-            fontWeight: 700,
-            color: COLORS.textDark
-          }}
-        >
-          <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Icon icon={ICONS.code} size={24} color={COLORS.pinkDark} />
-            从源码构建：
-          </span>
-          <code
-            style={{
-              background: '#ffeaf2',
-              color: COLORS.pinkDark,
-              padding: '6px 16px',
-              borderRadius: 10,
-              fontSize: 20
-            }}
-          >
-            git clone → npm install → npm run dev
-          </code>
-          <span style={{ color: COLORS.textGray, fontSize: 20 }}>免费 · 开源 · GPL</span>
         </div>
       </div>
 

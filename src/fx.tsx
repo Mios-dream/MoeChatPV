@@ -455,6 +455,22 @@ export const RotatingFlower: React.FC<{
   )
 }
 
+/**
+ * 功能段舞台背景：斜纹底与角色介绍同款的旋转角花。
+ * 作为背景层渲染，不遮挡后续的标题、卡片或角色素材。
+ */
+export const FeatureStageBackdrop: React.FC = () => {
+  return (
+    <AbsoluteFill style={{ pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
+      <StripedStage />
+      <RotatingFlower left={170} top={210} size={118} opacity={0.58} offset={12} />
+      <RotatingFlower left={1770} top={210} size={82} opacity={0.5} offset={72} />
+      <RotatingFlower left={170} top={870} size={76} opacity={0.48} offset={210} />
+      <RotatingFlower left={1740} top={850} size={142} opacity={0.56} offset={148} />
+    </AbsoluteFill>
+  )
+}
+
 export const easeOut = Easing.bezier(0.16, 1, 0.3, 1)
 export const easeInOut = Easing.bezier(0.45, 0, 0.55, 1)
 export const popEase = Easing.bezier(0.34, 1.56, 0.64, 1)

@@ -1,9 +1,10 @@
 import React from 'react'
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { StripedStage, usePop } from '../fx'
+import { FeatureStageBackdrop, usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
+import { UPPER_BODY_ZOOM } from '../live2d/characterFraming'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 // 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
@@ -120,12 +121,14 @@ const WidgetCard: React.FC<{
 export const WidgetShowcase: React.FC = () => {
   const frame = useCurrentFrame()
   const titleP = usePop(frame, 8)
+  const panelP = usePop(frame, 20, 34)
+  const characterP = usePop(frame, 34, 36)
 
   return (
     <AbsoluteFill>
-      <StripedStage />
+      <FeatureStageBackdrop />
 
-      {/* 章节标签：她住进桌面以后。 */}
+      {/* 章节标签：小组件服务。 */}
       <div
         style={{
           position: 'absolute',
@@ -134,7 +137,8 @@ export const WidgetShowcase: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          opacity: titleP
+          opacity: titleP,
+          transform: `translateY(${(1 - titleP) * -20}px)`
         }}
       >
         <Icon icon={ICONS.wand} size={40} color={COLORS.gold} />
@@ -147,7 +151,7 @@ export const WidgetShowcase: React.FC = () => {
             textShadow: `0 6px 24px ${COLORS.pinkShadow}`
           }}
         >
-          她住进桌面以后
+          小组件服务
         </div>
       </div>
 
@@ -163,7 +167,10 @@ export const WidgetShowcase: React.FC = () => {
           borderRadius: 34,
           background: 'rgba(255,255,255,0.62)',
           border: `2px solid ${COLORS.pinkPale}`,
-          boxShadow: `0 24px 60px -22px ${COLORS.pinkShadow}`
+          boxShadow: `0 24px 60px -22px ${COLORS.pinkShadow}`,
+          zIndex: 2,
+          opacity: panelP,
+          transform: `translateX(${(1 - panelP) * -48}px) scale(${0.94 + panelP * 0.06})`
         }}
       >
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
@@ -173,16 +180,20 @@ export const WidgetShowcase: React.FC = () => {
         </div>
       </div>
 
-      {/* 智乃本尊：她的日常回复，刚好对应桌面上的小组件。 */}
+      {/* 智乃本尊：向右让出小组件阅读区域，和卡片错峰入场。 */}
       <CharacterClip
         name={WIDGET_ASSET.name}
         durationInFrames={WIDGET_ASSET.durationInFrames}
         voiceVolume={0.96}
+        zoom={UPPER_BODY_ZOOM}
+        fadeIn={18}
         style={{
-          right: -300,
-          top: -90,
-          width: 1300,
-          height: 1300
+          left: 550,
+          top: 0,
+          width: 1100,
+          height: 1100,
+          zIndex: 10,
+          transform: `translateX(${(1 - characterP) * 74}px)`
         }}
       />
     </AbsoluteFill>
