@@ -1,7 +1,7 @@
 import React from 'react'
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { SceneBackground, usePop } from '../fx'
+import { StripedStage, usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -155,7 +155,7 @@ export const ScenesScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#fff0f6" to="#ffd8e5" sparkleSeed={9} petals />
+      <StripedStage />
 
       {/* 场景内的小标签：一整天的时间流。 */}
       <div

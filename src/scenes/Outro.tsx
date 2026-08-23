@@ -1,7 +1,7 @@
 import React from 'react'
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { SceneBackground, usePop } from '../fx'
+import { StripedStage, usePop } from '../fx'
 import { Mascot } from '../mascot'
 import { FeatureChip, PopText } from '../ui'
 import { Icon, ICONS } from '../icons'
@@ -18,7 +18,7 @@ export const Outro: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#ffe7f0" to="#ffcfe0" sparkleSeed={23} />
+      <StripedStage />
 
       <div
         style={{

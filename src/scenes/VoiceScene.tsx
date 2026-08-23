@@ -1,7 +1,7 @@
 import React from 'react'
 import { AbsoluteFill, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { SceneBackground, usePop } from '../fx'
+import { StripedStage, usePop } from '../fx'
 import { ChatBubble, WindowFrame } from '../ui'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
@@ -19,7 +19,7 @@ export const VoiceScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#fff1f6" to="#ffd9e6" sparkleSeed={77} petals />
+      <StripedStage />
 
       {/* 场景内的小标签：像是对话中的状态提示，而不是章节标题。 */}
       <div

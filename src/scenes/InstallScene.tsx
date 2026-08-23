@@ -1,7 +1,7 @@
 import React from 'react'
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { SceneBackground, usePop } from '../fx'
+import { StripedStage, usePop } from '../fx'
 import { Mascot } from '../mascot'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
@@ -32,7 +32,7 @@ export const InstallScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#ffedf4" to="#ffd5e2" sparkleSeed={13} petals />
+      <StripedStage />
 
       {/* 第一步：接她的四个步骤。她登场后，步骤轻轻让位。 */}
       <div

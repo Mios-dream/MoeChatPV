@@ -2,7 +2,7 @@ import React from 'react'
 import { AbsoluteFill, Sequence, staticFile, useCurrentFrame } from 'remotion'
 import { Video } from '@remotion/media'
 import { COLORS, FONT } from '../theme'
-import { SceneBackground, usePop } from '../fx'
+import { StripedStage, usePop } from '../fx'
 import { WindowFrame } from '../ui'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
@@ -36,7 +36,7 @@ export const GalleryScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#fff0f6" to="#ffd9e6" sparkleSeed={15} petals />
+      <StripedStage />
 
       {/* 场景内的小标签：她的日记本。 */}
       <div

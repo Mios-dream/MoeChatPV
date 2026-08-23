@@ -4,7 +4,7 @@ import { Audio } from '@remotion/media'
 import { TransitionSeries, linearTiming } from '@remotion/transitions'
 import { fade } from '@remotion/transitions/fade'
 import { SubtitleLayer } from './subtitles'
-import { SceneBackground } from './fx'
+import { StripedStage } from './fx'
 import { Opening } from './scenes/Opening'
 import { Live2DCharacterShowcase, SHOWCASE_DURATION } from './scenes/Live2DCharacterShowcase'
 import { FEATURE_START, Live2DFeatureShowcase } from './scenes/Live2DFeatureShowcase'
@@ -31,31 +31,11 @@ export const SCENE_DURATIONS = {
 
 export const TRANSITION = 15
 
-// Live2D 两个阶段共用的斜纹纹理。
-const HeroStripes: React.FC<{ opacity: number }> = ({ opacity }) => (
-  <AbsoluteFill
-    style={{
-      opacity,
-      background:
-        'repeating-linear-gradient(135deg, rgba(255,152,180,0.24) 0 50px, transparent 50px 100px)'
-    }}
-  />
-)
-
 // Hero 阶段一：角色立绘、名称出现、旋转花朵与横幅退场。
 // 占 Hero 段的第 0-319 帧；角色展示主体在第 308 帧结束。
 const HeroCharacterStage: React.FC = () => (
   <AbsoluteFill>
-    <SceneBackground
-      from="#fffafc"
-      via="#fffafc"
-      to="#fffafc"
-      hearts={false}
-      sparkleSeed={61}
-      blobs={false}
-      ribbons={false}
-    />
-    <HeroStripes opacity={0.68} />
+    <StripedStage />
     <Sequence durationInFrames={SHOWCASE_DURATION}>
       <Live2DCharacterShowcase />
     </Sequence>
@@ -66,16 +46,7 @@ const HeroCharacterStage: React.FC = () => (
 // 从 FEATURE_START 开始，此时角色介绍阶段的背景已经完成退场。
 const HeroFeatureStage: React.FC = () => (
   <AbsoluteFill>
-    <SceneBackground
-      from="#fffafc"
-      via="#fffafc"
-      to="#fffafc"
-      hearts={false}
-      sparkleSeed={61}
-      blobs={false}
-      ribbons={false}
-    />
-    <HeroStripes opacity={0.68} />
+    <StripedStage />
     <Live2DFeatureShowcase />
   </AbsoluteFill>
 )

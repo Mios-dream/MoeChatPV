@@ -376,6 +376,36 @@ export const SceneBackground: React.FC<{
   )
 }
 
+/**
+ * 功能演示阶段同款背景：纯白粉底色 + 斜纹 + 星点闪光。
+ * 后续所有场景统一使用这套背景，保持全片视觉一致。
+ */
+export const StripedStage: React.FC<{
+  opacity?: number
+  sparkleSeed?: number
+}> = ({ opacity = 0.68, sparkleSeed = 61 }) => {
+  return (
+    <AbsoluteFill>
+      <SceneBackground
+        from="#fffafc"
+        via="#fffafc"
+        to="#fffafc"
+        hearts={false}
+        sparkleSeed={sparkleSeed}
+        blobs={false}
+        ribbons={false}
+      />
+      <AbsoluteFill
+        style={{
+          opacity,
+          background:
+            'repeating-linear-gradient(135deg, rgba(255,152,180,0.24) 0 50px, transparent 50px 100px)'
+        }}
+      />
+    </AbsoluteFill>
+  )
+}
+
 export const easeOut = Easing.bezier(0.16, 1, 0.3, 1)
 export const easeInOut = Easing.bezier(0.45, 0, 0.55, 1)
 export const popEase = Easing.bezier(0.34, 1.56, 0.64, 1)

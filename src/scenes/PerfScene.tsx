@@ -1,7 +1,7 @@
 import React from 'react'
 import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { SceneBackground, usePop } from '../fx'
+import { StripedStage, usePop } from '../fx'
 import { Mascot } from '../mascot'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
@@ -69,7 +69,7 @@ export const PerfScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <SceneBackground from="#fffdfe" via="#f2f9ff" to="#dcedff" sparkleSeed={55} />
+      <StripedStage />
 
       {/* 场景内的小标签：她懂事地休息。 */}
       <div
