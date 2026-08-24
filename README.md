@@ -1,96 +1,175 @@
-# MoeChat 宣传视频 (PV)
+# 🎬 MoeChat-APP 宣传 PV
 
-基于 [Remotion](https://www.remotion.dev/) 生成的 1920×1080 横屏宣传视频，目标观众为 B 站二次元用户，整体采用项目主题色（粉色 / 白色），图标使用 Font Awesome（免费开源图标库，与应用内一致）。
+<img alt="MoeChat-APP 角色展示场景" src="./public/images/role-showcase-header.png" width="100%">
 
-## 成片
+<p align="center">
+  <span>MoeChat-APP 角色宣传视频制作工程</span>
+  <br/>
+  <span>基于 Remotion 编排画面、字幕、转场与角色素材，面向 1920×1080 横屏发布</span>
+</p>
 
-- `out/moechat-pv-chino.mp4` — 最终成片（H.264 + AAC，30fps，约 105.5 秒）
+<p align="center">
+  <a href="https://www.remotion.dev/"><img alt="Remotion 4" src="https://img.shields.io/badge/Remotion-4.0.512-0B84F3?style=flat-square&logo=remotion"></a>
+  <a href="https://react.dev/"><img alt="React 19" src="https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat-square&logo=react"></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat-square&logo=typescript"></a>
+  <a href="../LICENSE"><img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat-square"></a>
+</p>
 
-## 视频结构（v2）
+<p align="center">
+  <a href="#-成片预览">成片预览</a> •
+  <a href="#-制作流程">制作流程</a> •
+  <a href="#-快速开始">快速开始</a> •
+  <a href="#-素材说明">素材说明</a> •
+  <a href="#%EF%B8%8F-重要注意事项">注意事项</a> •
+  <a href="#-目录结构">项目结构</a>
+</p>
 
-| 时间段 | 场景 | 内容 |
-| --- | --- | --- |
-| 00:00–00:09 | 开场 | 开幕台词（保留原句）+ 旋转樱花 → 项目名与图标 |
-| 00:09–00:21 | 角色展示 | 项目 Live2D 模型实时驱动动画 + 摄像机运镜，标志性台词「哼，杂鱼哥哥，欢迎回来！」 |
-| 00:21–00:45 | 聊天展示 | Live2D 头部特写为画面中心，逐条回应 3 个类别（摸摸头 / 天气提醒 / 睡眠模式），回复与左侧标签切换均带交叉淡入淡出，背景带旋转花朵 |
-| 00:45–00:57 | 聊天情景 | 时间线：早安 → 白天 → 深夜 → 晚安，助手空间的朋友们可换着陪伴（Live2D 语音） |
-| 00:57–01:09 | 低占用模式 | Live2D 真实睡眠状态：闭眼小憩 → 被叫到时半睁眼回答 → 再睡回去；低占用数据退到角落小卡（`--sleep` 素材） |
-| 01:08–01:17 | 她的日记本 | 日记 / 主页·状态双标签窗口（视频标签带淡入淡出切换），她护着日记不给看（Live2D 语音） |
-| 01:17–01:31 | 小组件演示 | 纯小组件演示：时钟 / 天气 / 每日一句 / 任务板 / 便签（Live2D 语音为对应场景的日常回复） |
-| 01:30–01:58 | 结尾 | MoeChat 品牌信息、开源说明与 GitHub 链接 |
+---
 
-> 注：v3 起去掉了花瓣 / 爱心飘落动效；开屏改为台词 + 旋转樱花 + Logo；并集成了项目同款 Live2D 模型。后续版本统一为角色驱动的连续叙事：全片字幕只有智乃台词、无旁白；**全片统一为「哥哥」人设口吻（开幕词除外）**；每个场景都有角色在场；转场统一使用淡入淡出；所有场景统一使用白色斜纹 + 星点背景（`StripedStage`）。助手语音均为贴合人设卡（傲娇、口是心非）的日常回复，不介绍界面；素材脚本支持 `--sleep` 睡眠模式（眼部按口型半睁/闭合 + 压低动作幅度）。
+## 📋 项目简介
 
-## Live2D 集成
+**MoeChat 宣传 PV** 是 [MoeChat-APP](../README.md) 的宣传视频制作工程。它将应用界面录屏、项目角色、Live2D 预渲染片段、字幕、配音和 BGM 编排为一支横屏 PV；主时间线由 Remotion 驱动，可在 Studio 中实时调整与预览。
 
-- 使用与应用一致的 `untitled-pixi-live2d-engine`（PixiJS v8）预渲染项目内模型（`public/live2d/重置版智乃/`）。
-- 同时加载 Cubism 2（`live2d.min.js`）与 Cubism 5（`live2dcubismcore.min.js`）两个运行时，并按 Remotion 帧时钟逐帧驱动动作（`src/live2d/Live2DStage.tsx`），保证渲染确定性与 Studio 预览可用。
-- 动作来自模型自带的 Idle 组（`idle_1`、`Hiyori_m02/m03/m07/m08`），按时间轴依次切换；角色右侧 + 左侧功能演示窗口（聊天 / 待办 / 天气 / 日记）。
+本仓库中的 Git 版本定位为**制作脚本与低体积预览工程**。完整成片需要在准备好原始素材后由本地环境合成，详见下方的注意事项。
 
-### 预渲染角色素材
+## 🎞️ 成片预览
 
-主 PV 不再直接在多线程渲染时驱动 Live2D。角色会先以单线程渲染为带 Alpha 的 **4K（3840×3840）WebM**，再由主时间线合成，从而避免 Cubism 物理和眨眼状态在并行帧之间跳变，同时保证头部特写放大后依然清晰。合成命令带 `--gl=angle`，让 Chromium 在无头模式下使用 GPU（WebGL / 视频解码 / 阴影渐变均走硬件加速）。角色亮相使用 `showcase-intro`，功能阶段使用 `feature-chat`；最终视频静音合成，配音从同目录 WAV 独立挂载。
+> 完整视频预览：**待补充**
 
-Remotion Studio 预览时使用同目录的轻量代理素材 `character-preview.webm`（1280×1280，约 1MB），CLI 导出则使用 4K 主素材 `character.webm`，两者由 `CharacterClip` 按 `remotion_isStudio` 自动选择——预览不卡、导出不糊。代理素材由素材脚本在合成 4K 主素材后自动生成，无需手动处理。
+### 视频内容
 
-模型只从 `public/live2d/重置版智乃/` 读取，脚本不会改动应用项目或模型文件。生成的素材保存在 `public/live2d-generated/<name>/`，包含 `source.json`、可选的 `voice.wav` 与 `character.webm`。
+| 段落     | 场景         | 展示内容                           |
+| -------- | ------------ | ---------------------------------- |
+| 开场     | 品牌亮相     | 项目名称、应用图标与开幕文案       |
+| 角色展示 | Live2D 演出  | 角色动作、运镜与欢迎语             |
+| 功能演示 | 聊天与陪伴   | 对话、天气提醒、睡眠模式与日常互动 |
+| 功能演示 | 日记与小组件 | 日记、时钟、天气、任务板与便签     |
+| 结尾     | 品牌收束     | 项目定位、开源信息与访问入口       |
+
+## 🧩 制作流程
+
+1. **准备素材**：补齐应用录屏、高清 Live2D 角色视频、语音与 BGM。
+2. **生成角色片段**：使用 `live2d:asset` 脚本，将本地 Live2D 模型、动作和语音制作成可叠加的透明视频素材。
+3. **编排时间线**：在 `src/MoeChatPV.tsx` 调整场景顺序、时长、字幕和转场；文案集中维护在 `src/captions.ts`。
+4. **Studio 预览**：通过 Remotion Studio 检查节奏、构图与素材衔接。
+5. **本地合成成片**：全部素材确认后，在具备完整素材的环境中执行最终渲染。
+
+## 🚀 快速开始
+
+### 📦 环境要求
+
+| 软件                | 版本       | 说明                                 |
+| ------------------- | ---------- | ------------------------------------ |
+| Node.js             | ≥ 22       | JavaScript 运行环境                  |
+| npm                 | 最新稳定版 | 依赖安装与脚本执行                   |
+| Chromium / GPU 驱动 | 推荐最新   | 用于 Remotion Studio 与最终 GPU 渲染 |
+| Live2D 本地素材     | 渲染时必需 | Git 仓库不包含模型资源               |
+
+### 💻 安装与预览
+
+1. 从主项目根目录安装依赖：
+
+   ```bash
+   cd pv
+   npm install
+   ```
+
+2. 打开 Remotion Studio：
+
+   ```bash
+   npm run dev
+   ```
+
+3. 在 Studio 中选择 `MoeChatPV` 合成，按时间线预览场景与动画。
+
+### ⚡ 可用命令
 
 ```bash
-# 使用后端生成语音 + 动作，并渲染带透明通道的视频
+npm run dev             # 打开 Remotion Studio，实时预览
+npm run still           # 渲染单帧，检查画面布局
+npm run render:preview  # 输出低分辨率预览 MP4（完整素材环境）
+npm run render          # 输出 1920×1080 最终 MP4（完整素材环境）
+
+# 基于本地 Live2D 模型、后端语音与动作接口生成角色片段
 npm run live2d:asset -- --name greeting --text "欢迎回来，阁下，今天也要一起加油哦！"
-
-# 只生成可循环的待机角色素材（主 PV 默认使用这个名称）
-npm run live2d:asset -- --name hero-idle --seconds 20 --no-tts --no-motion
-
-# 需要在传统剪辑软件中抠像时，输出纯绿幕 H.264 视频
-npm run live2d:asset -- --name greeting-key --text "欢迎回来，阁下" --background chroma
-
-# 使用已有音频 / 动作配置重新渲染（不会请求后端）
-npm run live2d:asset -- --name feature-chat --text "想聊天、查天气，还是记下今天的心情？告诉我吧。" --from-props public/live2d-generated/feature-chat/render-props.json --seconds 12
 ```
 
-后端默认地址为 `http://127.0.0.1:8001`，可通过 `--api-base` 覆盖。透明素材使用 VP9 + Alpha；脚本始终使用 `--concurrency=1`，保证同一个 Live2D 实例按帧顺序推进。语音文件会被分析为口型强度曲线，和 `/api/generate_motion` 返回的动作曲线一起写入独立素材。
+## 🎨 素材说明
 
-## 常用命令
+### 已纳入 Git 的内容
 
-```bash
-npm run dev          # 打开 Remotion Studio 实时预览
-npm run still        # 渲染单帧（预览布局）
-npm run render       # 渲染最终 MP4（--gl=angle GPU 渲染 + NVENC 硬件编码）
-```
+- Remotion 场景、时间线、字幕、转场与 UI 组件源码。
+- 字体、图标、BGM、部分配音和低体积角色预览片段。
+- Live2D 素材生成脚本，以及 Cubism 运行时文件。
+- 可用于替换和调试的角色立绘与少量录屏片段。
 
-> 制作规范：修改代码后默认只做语法级验证，不自动截图、完整渲染或导出视频。修改结果通过 Remotion Studio 网页实时预览；PV 全部完成且用户明确要求时才执行 `npm run render`。详细约定见 [`AGENTS.md`](./AGENTS.md)。
+### 需要自行准备的内容
 
-## 自定义与素材接入
+- **高清应用录屏与最终视频素材**：仓库未上传完整高清素材，无法直接得到发布级成片。
+- **Live2D 模型资源**：仓库不包含 `public/live2d/重置版智乃/` 所需模型、贴图和动作文件，仅保留渲染脚本与运行时。请按原路径放置已获授权的本地资源。
+- **最终角色透明视频**：正式导出使用高分辨率 `character.webm`；Git 版本通常只保留体积较小的 `character-preview.webm` 预览文件。
 
-- **图标**：全部使用 Font Awesome Free Solid（`src/icons.tsx` 统一注册），无 emoji。
-- **实机录像**：`public/video/clips/` 下的 6 段裁剪片段分别用于“聊天 / 桌宠 / 待办 / 天气 / 日记 / 主页”场景（用 ffmpeg 预裁剪，避免运行时裁剪导致黑帧），默认静音（`muted`）；如需保留录像原声，去掉 `muted` 即可。原始录屏存放在 `pv/media-original/`（不参与打包），重新裁剪的命令示例：
+### 素材放置约定
 
-  ```bash
-  ffmpeg -ss 4 -t 9 -i media-original/chat-demo.mp4 -c:v libx264 -crf 18 -pix_fmt yuv420p -c:a aac public/video/clips/chat.mp4
-  ```
-- **BGM / 配音**：把音频文件放入 `public/`，在 `src/MoeChatPV.tsx` 中加一行 `<Audio src={staticFile("music.mp3")} />` 即可；如提供配音，可以把底部字幕与语音逐句同步。
-- **正式角色素材**：`public/images/mascot.png` 为项目角色立绘（Q 版），替换该文件即可换形象。
-- **新截图**：`public/images/` 下的主页 / 助手空间 / 助手管理 / 小组件管理 / 设置页 / 聊天历史 / 日记功能等截图可随时替换进各场景。
-- **场景 / 文案**：字幕文案集中在 `src/captions.ts`，场景参数集中在 `src/MoeChatPV.tsx`。
+| 素材           | 位置                              | 用途                                   |
+| -------------- | --------------------------------- | -------------------------------------- |
+| Live2D 模型    | `public/live2d/重置版智乃/`       | 由角色素材脚本读取，不随 Git 提供      |
+| 生成角色片段   | `public/live2d-generated/<name>/` | `character.webm`、预览文件、语音与配置 |
+| 应用录屏       | `public/video/clips/`             | 各功能场景的录屏素材                   |
+| 角色立绘与截图 | `public/images/`                  | 静态角色、应用页面与封面图             |
+| 音频与 BGM     | `public/audio/`、`public/bgm/`    | 台词、配音与背景音乐                   |
 
-## 目录结构
+## ⚠️ 重要注意事项
 
-```
+> **Git 版本仅用于代码查看与 Studio 预览。** 由于完整高清素材没有上传，克隆仓库后不具备直接生成正式成片的条件。
+
+> **不可直接渲染正式 MP4。** 最终渲染依赖未纳入 Git 的高清录屏、4K Live2D 透明视频和模型资源；请在素材齐全的本地制作环境中手动合成。
+
+> **不包含 Live2D 原始资源。** 本项目只提供 Live2D 渲染脚本、运行时与部分预览产物，不提供模型文件、贴图或动作资源。使用前请自行取得合法授权并放入约定目录。
+
+### 修改约定
+
+- 日常修改优先通过 `npm run dev` 在 Remotion Studio 中预览。
+- 修改完成后默认只做 TypeScript / JSX 等语法级检查；不自动渲染完整视频或导出 MP4。
+- 只有在所有高清素材已接入、PV 确认完成并明确需要导出时，才执行 `npm run render`。
+- PV 相关改动仅应位于 `pv/` 目录内，详细规则见 [AGENTS.md](./AGENTS.md)。
+
+## 📂 目录结构
+
+```text
 pv/
 ├── src/
-│   ├── scenes/        # 各场景组件（10 个场景）
-│   ├── MoeChatPV.tsx  # 总合成：转场、字幕、音效
-│   ├── captions.ts    # 字幕文案与时间轴
-│   ├── fx.tsx         # 背景动效（樱花、星光、光斑、爱心）
-│   ├── ui.tsx         # 窗口、气泡、卡片等 UI 组件
-│   ├── mascot.tsx     # 澪酱角色组件
-│   ├── icons.tsx      # Font Awesome 图标注册
-│   └── Root.tsx       # 1920×1080 合成注册
+│   ├── scenes/                  # 开场、角色、功能、结尾等场景组件
+│   ├── live2d/                  # Live2D 载入、角色片段与构图逻辑
+│   ├── MoeChatPV.tsx            # 主时间线与场景编排
+│   ├── captions.ts              # 字幕文案与时间轴数据
+│   ├── fx.tsx                   # 背景与转场动效
+│   └── Root.tsx                 # Remotion 合成注册
+├── scripts/
+│   └── create-live2d-asset.mjs  # 本地 Live2D 角色素材生成脚本
 ├── public/
-│   ├── fonts/         # 项目同款字体（大萌卡通体 / 三极圆体简 / 萝莉体）
-│   ├── images/        # 角色立绘、应用截图（含新增截图）
-│   ├── video/         # 实机录屏素材
-│   └── sfx/           # 生成的小音效（pop / ding）
-└── out/               # 渲染产物
+│   ├── audio/                   # 配音与台词
+│   ├── bgm/                     # 背景音乐
+│   ├── fonts/                   # 项目字体
+│   ├── images/                  # 立绘、图标与页面截图
+│   ├── live2d/                  # 本地模型放置位置（Git 不含模型）
+│   ├── live2d-generated/        # 角色预渲染产物
+│   └── video/                   # 应用录屏片段
+└── out/                         # 本地渲染输出（不建议提交）
 ```
+
+## 🤝 关联项目
+
+- [MoeChat-APP](../README.md) - Electron + Vue 3 桌面客户端
+- [MoeChat](https://github.com/Mios-dream/MoeChat) - 项目后端
+- [Remotion](https://www.remotion.dev/) - React 视频编程框架
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/Mios-dream">Mios-dream</a>
+</p>
+
+<p align="center">
+  <a href="#-moechat-app-宣传-pv">⬆ 返回顶部</a>
+</p>
