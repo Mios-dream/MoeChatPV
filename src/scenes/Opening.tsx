@@ -94,7 +94,7 @@ export const Opening: React.FC = () => {
         style={{
           alignItems: 'center',
           justifyContent: 'center',
-          opacity: quoteOpacity,
+          opacity: quoteOpacity
         }}
       >
         <div
@@ -149,7 +149,7 @@ export const Opening: React.FC = () => {
               text="MoeChat"
               delay={187}
               fontSize={148}
-              color={COLORS.pinkDark}
+              color={COLORS.pink}
             />
           </div>
           <div
