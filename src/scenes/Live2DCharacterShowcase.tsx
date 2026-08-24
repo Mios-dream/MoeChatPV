@@ -129,7 +129,6 @@ const CharacterIntro: React.FC = () => {
           width: 900,
           zIndex: 3,
           opacity: nameP,
-          transform: `translateY(${(1 - nameP) * 28}px)`
         }}
       >
         <div
@@ -162,52 +161,6 @@ const CharacterIntro: React.FC = () => {
           内置助手
         </div>
       </div>
-    </div>
-  )
-}
-
-type FlowerProps = {
-  left: number
-  top: number
-  size: number
-  opacity: number
-  offset: number
-}
-
-const Flower: React.FC<FlowerProps> = ({ left, top, size, opacity, offset }) => {
-  const frame = useCurrentFrame()
-  const petalWidth = size * 0.52
-  const petalHeight = size * 0.38
-
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        left,
-        top,
-        width: size,
-        height: size,
-        opacity,
-        transform: `translate(-50%, -50%) rotate(${offset + frame * 5}deg)`,
-        transformOrigin: 'center center'
-      }}
-    >
-      {Array.from({ length: 5 }, (_, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            width: petalWidth,
-            height: petalHeight,
-            background: '#f6a7bf',
-            borderRadius: '50%',
-            transform: `translateY(-50%) rotate(${index * 72}deg)`,
-            transformOrigin: '0 50%'
-          }}
-        />
-      ))}
     </div>
   )
 }
@@ -247,10 +200,6 @@ export const Live2DCharacterShowcase: React.FC = () => {
             transform: `translateY(${bannerExitP * 120}px)`
           }}
         />
-        <Flower left={170} top={210} size={118} opacity={0.58} offset={12} />
-        <Flower left={1770} top={210} size={82} opacity={0.5} offset={72} />
-        <Flower left={170} top={870} size={76} opacity={0.48} offset={210} />
-        <Flower left={1740} top={850} size={142} opacity={0.56} offset={148} />
       </AbsoluteFill>
       <PortraitShot from={0} to={66} imageY={-1000} imageScale={2} />
       <PortraitShot from={54} to={130} imageY={0} imageX={-200} imageScale={2} />

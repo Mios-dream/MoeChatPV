@@ -6,48 +6,30 @@ import { Mascot } from '../mascot'
 import { FeatureChip, PopText } from '../ui'
 import { Icon, ICONS } from '../icons'
 
+// 延续原有结尾构图，仅以中性的项目与开源信息完成收束。
 export const Outro: React.FC = () => {
   const frame = useCurrentFrame()
   const cardP = usePop(frame, 140)
   const chipsP = usePop(frame, 185)
-  const biliP = usePop(frame, 225)
-  const fadeOut = interpolate(frame, [380, 415], [0, 1], {
+  const updateP = usePop(frame, 225)
+  const backdropP = interpolate(frame, [0, 15], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
-
   return (
     <AbsoluteFill>
-      <StripedStage />
+      <AbsoluteFill style={{ opacity: backdropP }}>
+        <StripedStage />
+      </AbsoluteFill>
 
-      <div
-        style={{
-          position: 'absolute',
-          top: 150,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <PopText
-          text="把智乃放回你的桌面吧！"
-          delay={45}
-          fontSize={104}
-          color={COLORS.pinkDark}
-          gap={4}
-        />
+      <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <PopText text="开源桌面助手 MoeChat" delay={45} fontSize={92} color={COLORS.pinkDark} gap={4} />
       </div>
 
-      <div
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 330,
-          transform: 'translateX(-50%)'
-        }}
-      >
+      <div style={{ position: 'absolute', left: '50%', top: 330, transform: 'translateX(-50%)' }}>
         <Mascot size={200} delay={70} mood="happy" />
       </div>
+
       <div
         style={{
           position: 'absolute',
@@ -71,58 +53,21 @@ export const Outro: React.FC = () => {
             border: `2.5px solid ${COLORS.pinkPale}`,
             boxShadow: `0 24px 60px -20px ${COLORS.pinkShadow}`,
             opacity: cardP,
-            transform: `scale(${0.85 + 0.15 * cardP})`
           }}
         >
           <Icon icon={ICONS.star} size={52} color={COLORS.gold} />
           <div>
-            <div
-              style={{
-                fontFamily: FONT.kaTong,
-                fontSize: 36,
-                color: COLORS.pinkDark
-              }}
-            >
-              MoeChat-APP
-            </div>
-            <div
-              style={{
-                fontFamily: FONT.sanJi,
-                fontSize: 24,
-                color: COLORS.textGray
-              }}
-            >
+            <div style={{ fontFamily: FONT.kaTong, fontSize: 36, color: COLORS.pinkDark }}>MoeChat-APP</div>
+            <div style={{ fontFamily: FONT.sanJi, fontSize: 24, color: COLORS.textGray }}>
               github.com/Mios-dream/MoeChat-APP
             </div>
           </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            gap: 18,
-            opacity: chipsP,
-            transform: `translateY(${(1 - chipsP) * 20}px)`
-          }}
-        >
-          <FeatureChip
-            label="免费"
-            icon={<Icon icon={ICONS.gift} size={24} color={COLORS.pink} />}
-            delay={185}
-            size={22}
-          />
-          <FeatureChip
-            label="开源"
-            icon={<Icon icon={ICONS.code} size={24} color={COLORS.pink} />}
-            delay={205}
-            size={22}
-          />
-          <FeatureChip
-            label="持续更新"
-            icon={<Icon icon={ICONS.arrowsRotate} size={24} color={COLORS.pink} />}
-            delay={225}
-            size={22}
-          />
+        <div style={{ display: 'flex', gap: 18, opacity: chipsP }}>
+          <FeatureChip label="免费使用" icon={<Icon icon={ICONS.gift} size={24} color={COLORS.pink} />} delay={185} size={22} />
+          <FeatureChip label="开源项目" icon={<Icon icon={ICONS.code} size={24} color={COLORS.pink} />} delay={205} size={22} />
+          <FeatureChip label="持续更新" icon={<Icon icon={ICONS.arrowsRotate} size={24} color={COLORS.pink} />} delay={225} size={22} />
         </div>
 
         <div
@@ -134,23 +79,14 @@ export const Outro: React.FC = () => {
             fontSize: 26,
             color: COLORS.textGray,
             fontWeight: 600,
-            opacity: biliP,
-            transform: `translateY(${(1 - biliP) * 18}px)`
+            opacity: updateP,
           }}
         >
           <Icon icon={ICONS.thumbsUp} size={28} color={COLORS.pink} />
-          B站一键三连，支持我们继续发电～
+          欢迎关注项目后续更新
         </div>
       </div>
 
-      <AbsoluteFill
-        style={{
-          background: COLORS.white,
-          opacity: fadeOut,
-          zIndex: 70,
-          pointerEvents: 'none'
-        }}
-      />
     </AbsoluteFill>
   )
 }

@@ -1,5 +1,3 @@
-import { COLORS } from "./theme";
-
 export type Caption = {
   start: number;
   end: number;
@@ -40,18 +38,5 @@ export const CAPTIONS: Caption[] = [
     end: 1805,
     speaker: "智乃",
     text: "唔……吵死了！啊，是哥哥？哼，我才没睡着，只是在闭目养神！",
-  },
-  {
-    start: 2266,
-    end: 2450,
-    speaker: "智乃",
-    text: "下载、解压、打开……然后，把我也带回家吧，哥哥。",
-  },
-  {
-    start: 2570,
-    end: 2870,
-    speaker: "智乃",
-    text: "把智乃放回哥哥的桌面吧。哼……下次回来，我、我还会记得你的！",
-    color: COLORS.pinkDark,
   },
 ];

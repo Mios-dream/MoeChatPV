@@ -10,7 +10,7 @@ import {
 } from 'remotion'
 import { Audio } from '@remotion/media'
 import { COLORS, FONT } from '../theme'
-import { easeOut, useFade, usePop } from '../fx'
+import { useFade, usePop } from '../fx'
 import { PopText } from '../ui'
 
 const SakuraFlower: React.FC<{
@@ -70,21 +70,6 @@ export const Opening: React.FC = () => {
     extrapolateRight: 'clamp'
   })
   const quoteOpacity = Math.min(quoteIn, quoteOut)
-  const quoteScale = interpolate(
-    frame,
-    [QUOTE_START, QUOTE_START + 40, QUOTE_END - 30, QUOTE_END],
-    [0.96, 1, 1, 1.04],
-    {
-      easing: easeOut,
-      extrapolateLeft: 'clamp',
-      extrapolateRight: 'clamp'
-    }
-  )
-  const quoteY = interpolate(frame, [QUOTE_START, QUOTE_START + 40], [24, 0], {
-    easing: easeOut,
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp'
-  })
 
   // Stage 2: logo + name
   const iconP = usePop(frame, 173)
@@ -95,12 +80,6 @@ export const Opening: React.FC = () => {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   })
-  const irisScale = interpolate(frame, [238, 264], [0.03, 1.12], {
-    easing: Easing.bezier(0.64, 0, 0.78, 0),
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp'
-  })
-
   return (
     <AbsoluteFill style={{ background: COLORS.white }}>
       <Sequence from={QUOTE_START} durationInFrames={QUOTE_DURATION}>
@@ -116,7 +95,6 @@ export const Opening: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'center',
           opacity: quoteOpacity,
-          transform: `translateY(${quoteY}px) scale(${quoteScale})`
         }}
       >
         <div
@@ -153,7 +131,6 @@ export const Opening: React.FC = () => {
           <div
             style={{
               opacity: iconP,
-              transform: `scale(${0.5 + 0.5 * iconP})`,
               borderRadius: 42,
               overflow: 'hidden',
               boxShadow: `0 24px 70px -22px ${COLORS.pinkShadow}`,
@@ -178,7 +155,6 @@ export const Opening: React.FC = () => {
           <div
             style={{
               opacity: subP,
-              transform: `translateY(${(1 - subP) * 22}px)`,
               fontFamily: FONT.sanJi,
               fontSize: 38,
               color: COLORS.textDark,
@@ -194,21 +170,6 @@ export const Opening: React.FC = () => {
           </div>
         </div>
       </AbsoluteFill>
-      {frame >= 238 ? (
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            width: 2400,
-            height: 2400,
-            borderRadius: '50%',
-            background: '#ffe5ef',
-            transform: `translate(-50%, -50%) scale(${irisScale})`,
-            pointerEvents: 'none'
-          }}
-        />
-      ) : null}
     </AbsoluteFill>
   )
 }

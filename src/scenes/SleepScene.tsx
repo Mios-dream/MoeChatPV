@@ -1,17 +1,20 @@
 import React from 'react'
-import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { FeatureStageBackdrop, usePop } from '../fx'
+import { usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
 import { UPPER_BODY_ZOOM } from '../live2d/characterFraming'
 import { DayTimeline } from './ScenesScene'
 
-// 由 scripts/create-live2d-asset.mjs 生成（--sleep），时长以 source.json 为准。
+// 由 scripts/create-live2d-asset.mjs 生成，时长以 source.json 为准。
 export const SLEEP_ASSET = {
-  name: 'sleep-mode',
-  durationInFrames: 527
+  name: 'chat-reply-3',
+  durationInFrames: 392
 }
+export const SLEEP_SCENE_EXIT = 30
+export const SLEEP_SCENE_DURATION = SLEEP_ASSET.durationInFrames + SLEEP_SCENE_EXIT
+const CHARACTER_ENTRY_DELAY = 16
 
 const Meter: React.FC<{
   label: string
@@ -64,7 +67,17 @@ const Meter: React.FC<{
 export const SleepScene: React.FC = () => {
   const frame = useCurrentFrame()
   const titleP = usePop(frame, 8)
-  const characterP = usePop(frame, 36, 36)
+  const sceneExitP = interpolate(
+    frame,
+    [SLEEP_SCENE_DURATION - SLEEP_SCENE_EXIT, SLEEP_SCENE_DURATION],
+    [0, 1],
+    {
+      easing: Easing.in(Easing.cubic),
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp'
+    }
+  )
+  const sceneContentP = 1 - sceneExitP
   const zP = interpolate(frame, [80, 150], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
@@ -72,8 +85,6 @@ export const SleepScene: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <FeatureStageBackdrop />
-
       <div
         style={{
           position: 'absolute',
@@ -82,8 +93,7 @@ export const SleepScene: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          opacity: titleP,
-          transform: `translateY(${(1 - titleP) * -20}px)`
+          opacity: titleP * sceneContentP,
         }}
       >
         <Icon icon={ICONS.clock} size={40} color={COLORS.gold} />
@@ -99,7 +109,7 @@ export const SleepScene: React.FC = () => {
           全天陪伴
         </div>
       </div>
-      <DayTimeline showTitle={false} />
+      <DayTimeline showTitle={false} exitProgress={sceneExitP} />
 
       {/* 月光 + 睡意氛围，陪在她身边。 */}
       <div
@@ -110,7 +120,8 @@ export const SleepScene: React.FC = () => {
           width: 220,
           height: 220,
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(183,140,232,0.22) 0%, rgba(183,140,232,0) 70%)'
+          background: 'radial-gradient(circle, rgba(183,140,232,0.22) 0%, rgba(183,140,232,0) 70%)',
+          opacity: sceneContentP
         }}
       />
       <div
@@ -121,8 +132,7 @@ export const SleepScene: React.FC = () => {
           fontFamily: FONT.kaTong,
           fontSize: 64,
           color: COLORS.purple,
-          opacity: zP,
-          transform: `translateY(${(1 - zP) * 20}px)`,
+          opacity: zP * sceneContentP,
           letterSpacing: 8,
           zIndex: 12
         }}
@@ -195,16 +205,18 @@ export const SleepScene: React.FC = () => {
       <CharacterClip
         name={SLEEP_ASSET.name}
         durationInFrames={SLEEP_ASSET.durationInFrames}
+        start={CHARACTER_ENTRY_DELAY}
         voiceVolume={0.96}
         zoom={UPPER_BODY_ZOOM}
         fadeIn={18}
+        fadeOut={18}
+        holdUntil={SLEEP_SCENE_DURATION - CHARACTER_ENTRY_DELAY}
         style={{
           left: 550,
           top: 0,
           width: 1100,
           height: 1100,
           zIndex: 10,
-          transform: `translateX(${(1 - characterP) * 74}px)`
         }}
       />
     </AbsoluteFill>

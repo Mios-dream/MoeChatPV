@@ -24,7 +24,7 @@ export const Mascot: React.FC<{
           extrapolateLeft: 'clamp',
           extrapolateRight: 'clamp'
         }),
-        transform: `translateY(${bob}px) scale(${0.6 + 0.4 * pop}) `,
+        transform: `translateY(${bob}px)`,
         ...style
       }}
     >
@@ -86,7 +86,6 @@ export const SpeechBubble: React.FC<{
         color: COLORS.textDark,
         fontWeight: 600,
         opacity: p,
-        transform: `scale(${0.7 + 0.3 * p})`,
         zIndex: 5
       }}
     >

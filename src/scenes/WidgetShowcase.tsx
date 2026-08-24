@@ -1,7 +1,7 @@
 import React from 'react'
-import { AbsoluteFill, useCurrentFrame } from 'remotion'
+import { AbsoluteFill, interpolate, useCurrentFrame } from 'remotion'
 import { COLORS, FONT } from '../theme'
-import { FeatureStageBackdrop, usePop } from '../fx'
+import { usePop } from '../fx'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
 import { UPPER_BODY_ZOOM } from '../live2d/characterFraming'
@@ -12,6 +12,9 @@ export const WIDGET_ASSET = {
   name: 'widget-weather',
   durationInFrames: 365
 }
+export const WIDGET_SCENE_EXIT = 30
+export const WIDGET_SCENE_DURATION = WIDGET_ASSET.durationInFrames + WIDGET_SCENE_EXIT
+const CHARACTER_ENTRY_DELAY = 16
 
 const WIDGETS = [
   {
@@ -75,7 +78,7 @@ const WidgetCard: React.FC<{
         flexDirection: 'column',
         gap: 10,
         opacity: p,
-        transform: `translateY(${bob + (1 - p) * 26}px) scale(${0.82 + 0.18 * p})`
+          transform: `translateY(${bob}px)`
       }}
     >
       <div
@@ -122,12 +125,16 @@ export const WidgetShowcase: React.FC = () => {
   const frame = useCurrentFrame()
   const titleP = usePop(frame, 8)
   const panelP = usePop(frame, 20, 34)
-  const characterP = usePop(frame, 34, 36)
+  const sceneExitP = interpolate(
+    frame,
+    [WIDGET_SCENE_DURATION - WIDGET_SCENE_EXIT, WIDGET_SCENE_DURATION],
+    [0, 1],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  )
+  const sceneContentP = 1 - sceneExitP
 
   return (
     <AbsoluteFill>
-      <FeatureStageBackdrop />
-
       {/* 章节标签：小组件服务。 */}
       <div
         style={{
@@ -137,8 +144,7 @@ export const WidgetShowcase: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          opacity: titleP,
-          transform: `translateY(${(1 - titleP) * -20}px)`
+          opacity: titleP * sceneContentP,
         }}
       >
         <Icon icon={ICONS.wand} size={40} color={COLORS.gold} />
@@ -169,8 +175,7 @@ export const WidgetShowcase: React.FC = () => {
           border: `2px solid ${COLORS.pinkPale}`,
           boxShadow: `0 24px 60px -22px ${COLORS.pinkShadow}`,
           zIndex: 2,
-          opacity: panelP,
-          transform: `translateX(${(1 - panelP) * -48}px) scale(${0.94 + panelP * 0.06})`
+          opacity: panelP * sceneContentP,
         }}
       >
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
@@ -184,16 +189,18 @@ export const WidgetShowcase: React.FC = () => {
       <CharacterClip
         name={WIDGET_ASSET.name}
         durationInFrames={WIDGET_ASSET.durationInFrames}
+        start={CHARACTER_ENTRY_DELAY}
         voiceVolume={0.96}
         zoom={UPPER_BODY_ZOOM}
         fadeIn={18}
+        fadeOut={18}
+        holdUntil={WIDGET_SCENE_DURATION - CHARACTER_ENTRY_DELAY}
         style={{
           left: 550,
           top: 0,
           width: 1100,
           height: 1100,
           zIndex: 10,
-          transform: `translateX(${(1 - characterP) * 74}px)`
         }}
       />
     </AbsoluteFill>

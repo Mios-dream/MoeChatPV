@@ -10,7 +10,6 @@ export const WindowFrame: React.FC<{
   children: React.ReactNode
   popDelay?: number
   float?: boolean
-  scale?: number
   dotColor?: string
 }> = ({
   width,
@@ -19,7 +18,6 @@ export const WindowFrame: React.FC<{
   children,
   popDelay = 0,
   float = true,
-  scale = 1,
   dotColor = COLORS.pink
 }) => {
   const frame = useCurrentFrame()
@@ -34,7 +32,7 @@ export const WindowFrame: React.FC<{
           extrapolateLeft: 'clamp',
           extrapolateRight: 'clamp'
         }),
-        transform: `translateY(${bob}px) scale(${scale * (0.8 + 0.2 * pop)})`,
+        transform: `translateY(${bob}px)`,
         borderRadius: 26,
         background: 'rgba(255,255,255,0.92)',
         boxShadow: `0 22px 60px -18px ${COLORS.pinkShadow}, 0 6px 18px -10px rgba(251,114,153,0.25)`,
@@ -106,7 +104,6 @@ export const ChatBubble: React.FC<{
           extrapolateLeft: 'clamp',
           extrapolateRight: 'clamp'
         }),
-        transform: `translateY(${(1 - p) * 24}px)`
       }}
     >
       <div
@@ -182,7 +179,7 @@ export const FeatureChip: React.FC<{
         color: COLORS.textDark,
         fontFamily: FONT.sanJi,
         opacity: p,
-        transform: `translateY(${bob}px) scale(${0.7 + 0.3 * p})`,
+        transform: `translateY(${bob}px)`,
         whiteSpace: 'nowrap'
       }}
     >
@@ -214,7 +211,6 @@ export const SceneTitle: React.FC<{
         gap: 8,
         marginTop: 46,
         opacity: p,
-        transform: `scale(${0.8 + 0.2 * p})`,
         zIndex: 10
       }}
     >
@@ -240,7 +236,6 @@ export const SceneTitle: React.FC<{
             fontSize: 26,
             color: COLORS.textGray,
             opacity: subP,
-            transform: `translateY(${(1 - subP) * 16}px)`
           }}
         >
           {sub}
@@ -271,7 +266,6 @@ export const RoundedCard: React.FC<{
         border: `2px solid ${accent}`,
         boxShadow: `0 18px 44px -16px ${COLORS.pinkShadow}`,
         opacity: p,
-        transform: `scale(${0.82 + 0.18 * p})`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -299,7 +293,7 @@ export const Screenshot: React.FC<{
         height: '100%',
         padding: 18,
         opacity: p,
-        transform: `scale(${0.92 + 0.08 * p}) translateY(${bob}px)`
+        transform: `translateY(${bob}px)`
       }}
     >
       <Img
@@ -349,7 +343,6 @@ export const PopText: React.FC<{
               color,
               textShadow: `0 10px 30px ${COLORS.pinkShadow}`,
               opacity: p,
-              transform: `scale(${0.4 + 0.6 * p}) rotate(${(1 - p) * -8}deg)`,
               lineHeight: 1.15
             }}
           >

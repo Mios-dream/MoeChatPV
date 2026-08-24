@@ -460,8 +460,18 @@ export const RotatingFlower: React.FC<{
  * 作为背景层渲染，不遮挡后续的标题、卡片或角色素材。
  */
 export const FeatureStageBackdrop: React.FC = () => {
+  const frame = useCurrentFrame()
+  // During a TransitionSeries overlap, keep the incoming backdrop transparent
+  // long enough for the outgoing scene's own elements to finish their exit.
+  const entryP = interpolate(frame, [0, 15], [0, 1], {
+    easing: easeOut,
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp'
+  })
   return (
-    <AbsoluteFill style={{ pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
+    <AbsoluteFill
+      style={{ pointerEvents: 'none', overflow: 'hidden', zIndex: 0, opacity: entryP }}
+    >
       <StripedStage />
       <RotatingFlower left={170} top={210} size={118} opacity={0.58} offset={12} />
       <RotatingFlower left={1770} top={210} size={82} opacity={0.5} offset={72} />

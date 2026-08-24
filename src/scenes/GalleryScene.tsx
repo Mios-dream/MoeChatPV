@@ -1,8 +1,8 @@
 import React from 'react'
-import { AbsoluteFill, staticFile, useCurrentFrame } from 'remotion'
+import { AbsoluteFill, interpolate, staticFile, useCurrentFrame } from 'remotion'
 import { Video } from '@remotion/media'
 import { COLORS, FONT } from '../theme'
-import { FeatureStageBackdrop, usePop } from '../fx'
+import { usePop } from '../fx'
 import { WindowFrame } from '../ui'
 import { Icon, ICONS } from '../icons'
 import { CharacterClip } from '../live2d/CharacterClip'
@@ -13,17 +13,24 @@ export const DIARY_ASSET = {
   name: 'diary-secret',
   durationInFrames: 278
 }
+export const DIARY_SCENE_EXIT = 30
+export const DIARY_SCENE_DURATION = DIARY_ASSET.durationInFrames + DIARY_SCENE_EXIT
+const CHARACTER_ENTRY_DELAY = 16
 
 export const GalleryScene: React.FC = () => {
   const frame = useCurrentFrame()
   const titleP = usePop(frame, 8)
   const diaryP = usePop(frame, 24, 38)
-  const characterP = usePop(frame, 38, 36)
+  const sceneExitP = interpolate(
+    frame,
+    [DIARY_SCENE_DURATION - DIARY_SCENE_EXIT, DIARY_SCENE_DURATION],
+    [0, 1],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  )
+  const sceneContentP = 1 - sceneExitP
 
   return (
     <AbsoluteFill>
-      <FeatureStageBackdrop />
-
       {/* 标题样式与其他流程一致。 */}
       <div
         style={{
@@ -33,8 +40,7 @@ export const GalleryScene: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          opacity: titleP,
-          transform: `translateY(${(1 - titleP) * -20}px)`
+          opacity: titleP * sceneContentP,
         }}
       >
         <Icon icon={ICONS.book} size={40} color={COLORS.gold} />
@@ -58,8 +64,7 @@ export const GalleryScene: React.FC = () => {
           left: 90,
           top: 200,
           zIndex: 2,
-          opacity: diaryP,
-          transform: `translateX(${(1 - diaryP) * -56}px) scale(${0.94 + diaryP * 0.06})`
+          opacity: diaryP * sceneContentP,
         }}
       >
         <WindowFrame width={960} height={640} title="助手日记" popDelay={26}>
@@ -75,16 +80,18 @@ export const GalleryScene: React.FC = () => {
       <CharacterClip
         name={DIARY_ASSET.name}
         durationInFrames={DIARY_ASSET.durationInFrames}
+        start={CHARACTER_ENTRY_DELAY}
         voiceVolume={0.96}
         zoom={UPPER_BODY_ZOOM}
         fadeIn={18}
+        fadeOut={18}
+        holdUntil={DIARY_SCENE_DURATION - CHARACTER_ENTRY_DELAY}
         style={{
           left: 550,
           top: 0,
           width: 1100,
           height: 1100,
           zIndex: 10,
-          transform: `translateX(${(1 - characterP) * 74}px)`
         }}
       />
     </AbsoluteFill>

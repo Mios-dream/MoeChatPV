@@ -55,7 +55,8 @@ export const TimeNode: React.FC<{
   line: string
   delay: number
   y: number
-}> = ({ clock, label, icon, color, line, delay, y }) => {
+  exitProgress?: number
+}> = ({ clock, label, icon, color, line, delay, y, exitProgress = 0 }) => {
   const frame = useCurrentFrame()
   const p = usePop(frame, delay)
   return (
@@ -64,13 +65,12 @@ export const TimeNode: React.FC<{
         position: 'absolute',
         left: 150,
         top: y,
-        width: 620,
+        width: 690,
         display: 'flex',
         alignItems: 'center',
         gap: 20,
         zIndex: 2,
-        opacity: p,
-        transform: `translateY(${(1 - p) * 26}px)`
+        opacity: p * (1 - exitProgress)
       }}
     >
       <div
@@ -141,10 +141,11 @@ export const TimeNode: React.FC<{
 }
 
 /** 时间轴卡片，可嵌入全天陪伴段，展示一天中的关键问候。 */
-export const DayTimeline: React.FC<{ title?: string; showTitle?: boolean }> = ({
-  title = '从早到晚，她都在',
-  showTitle = true
-}) => {
+export const DayTimeline: React.FC<{
+  title?: string
+  showTitle?: boolean
+  exitProgress?: number
+}> = ({ title = '从早到晚，她都在', showTitle = true, exitProgress = 0 }) => {
   const frame = useCurrentFrame()
   const railP = interpolate(frame, [10, 160], [0, 1], {
     extrapolateLeft: 'clamp',
@@ -171,7 +172,8 @@ export const DayTimeline: React.FC<{ title?: string; showTitle?: boolean }> = ({
             fontSize: 24,
             fontWeight: 700,
             color: COLORS.textDark,
-            zIndex: 2
+            zIndex: 2,
+            opacity: 1 - exitProgress
           }}
         >
           <Icon icon={ICONS.clock} size={26} color={COLORS.purple} />
@@ -184,15 +186,15 @@ export const DayTimeline: React.FC<{ title?: string; showTitle?: boolean }> = ({
           left: 216,
           top: 248,
           width: 6,
-          height: 530,
+          height: 400,
           borderRadius: 999,
           background: `linear-gradient(180deg, ${COLORS.gold}, ${COLORS.pink}, ${COLORS.purple}, ${COLORS.blue})`,
           zIndex: 2,
-          opacity: railP * 0.35
+          opacity: railP * 0.35 * (1 - exitProgress)
         }}
       />
       {TIMES.map((t, i) => (
-        <TimeNode key={i} {...t} y={215 + i * 130} />
+        <TimeNode key={i} {...t} y={215 + i * 130} exitProgress={exitProgress} />
       ))}
     </>
   )
@@ -239,7 +241,7 @@ export const ScenesScene: React.FC = () => {
           left: 216,
           top: 248,
           width: 6,
-          height: 530,
+          height: 400,
           borderRadius: 999,
           background: `linear-gradient(180deg, ${COLORS.gold}, ${COLORS.pink}, ${COLORS.purple}, ${COLORS.blue})`,
           opacity: railP * 0.35

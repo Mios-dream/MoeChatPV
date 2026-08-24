@@ -1,6 +1,6 @@
 import React from "react";
 import { Composition } from "remotion";
-import { MoeChatPV } from "./MoeChatPV";
+import { MoeChatPV, SCENE_DURATIONS, TRANSITION } from "./MoeChatPV";
 import { Live2DAsset, LIVE2D_ASSET_DEFAULT_PROPS } from "./live2d/Live2DAsset";
 import "./fonts";
 
@@ -10,7 +10,11 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="MoeChatPV"
         component={MoeChatPV}
-        durationInFrames={2897}
+        // TransitionSeries 会让每个转场重叠 TRANSITION 帧。
+        durationInFrames={
+          Object.values(SCENE_DURATIONS).reduce((total, duration) => total + duration, 0) -
+          TRANSITION * (Object.keys(SCENE_DURATIONS).length - 1)
+        }
         fps={30}
         width={1920}
         height={1080}
