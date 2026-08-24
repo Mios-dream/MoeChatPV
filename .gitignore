@@ -3,4 +3,8 @@ out
 .npm-cache
 .remotion-binaries
 media-original
-public
+!.gitkeep
+build
+character.webm
+render-props.json
+重置版智乃

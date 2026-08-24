@@ -12,8 +12,3 @@ loadFont({
   url: staticFile("fonts/SanJiYuanTi.ttf"),
   weight: "400",
 });
-loadFont({
-  family: FONT.loli,
-  url: staticFile("fonts/Loli.ttf"),
-  weight: "400",
-});

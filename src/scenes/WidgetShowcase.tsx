@@ -9,8 +9,8 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 
 // 由 scripts/create-live2d-asset.mjs 生成的素材，时长以 source.json 为准。
 export const WIDGET_ASSET = {
-  name: 'widget-weather',
-  durationInFrames: 365
+  name: 'chat-reply-2',
+  durationInFrames: 350
 }
 export const WIDGET_SCENE_EXIT = 30
 export const WIDGET_SCENE_DURATION = WIDGET_ASSET.durationInFrames + WIDGET_SCENE_EXIT
@@ -78,7 +78,7 @@ const WidgetCard: React.FC<{
         flexDirection: 'column',
         gap: 10,
         opacity: p,
-          transform: `translateY(${bob}px)`
+        transform: `translateY(${bob}px)`
       }}
     >
       <div
@@ -144,7 +144,7 @@ export const WidgetShowcase: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 16,
-          opacity: titleP * sceneContentP,
+          opacity: titleP * sceneContentP
         }}
       >
         <Icon icon={ICONS.wand} size={40} color={COLORS.gold} />
@@ -175,7 +175,7 @@ export const WidgetShowcase: React.FC = () => {
           border: `2px solid ${COLORS.pinkPale}`,
           boxShadow: `0 24px 60px -22px ${COLORS.pinkShadow}`,
           zIndex: 2,
-          opacity: panelP * sceneContentP,
+          opacity: panelP * sceneContentP
         }}
       >
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
@@ -200,7 +200,7 @@ export const WidgetShowcase: React.FC = () => {
           top: 0,
           width: 1100,
           height: 1100,
-          zIndex: 10,
+          zIndex: 10
         }}
       />
     </AbsoluteFill>

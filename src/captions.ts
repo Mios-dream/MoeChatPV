@@ -25,7 +25,7 @@ export const CAPTIONS: Caption[] = [
     start: 890,
     end: 1120,
     speaker: "智乃",
-    text: "明天会下雨，哥哥出门记得带伞！哼，才不是特意看了天气预报呢。",
+    text: "今天会下雨，哥哥出门记得带伞！哼，才不是特意看了天气预报呢。",
   },
   {
     start: 1300,
