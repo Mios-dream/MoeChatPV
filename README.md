@@ -28,13 +28,13 @@
 
 ## 📋 项目简介
 
-**MoeChat 宣传 PV** 是 [MoeChat-APP](../README.md) 的宣传视频制作工程。它将应用界面录屏、项目角色、Live2D 预渲染片段、字幕、配音和 BGM 编排为一支横屏 PV；主时间线由 Remotion 驱动，可在 Studio 中实时调整与预览。
+**MoeChat 宣传 PV** 是 [MoeChat-APP](https://github.com/Mios-dream/Meochat-APP) 的宣传视频制作工程。它将应用界面录屏、项目角色、Live2D 预渲染片段、字幕、配音和 BGM 编排为一支横屏 PV；主时间线由 Remotion 驱动，可在 Studio 中实时调整与预览。
 
 本仓库中的 Git 版本定位为**制作脚本与低体积预览工程**。完整成片需要在准备好原始素材后由本地环境合成，详见下方的注意事项。
 
 ## 🎞️ 成片预览
 
-> 完整视频预览：**待补充**
+> 完整视频预览：[【名为智乃酱的servant——MoeChat宣传PV】](https://www.bilibili.com/video/BV1AFhA6fEWi/?share_source=copy_web&vd_source=d565370c8c0677914612e5acf1cd33a0)
 
 ### 视频内容
 
@@ -160,7 +160,7 @@ pv/
 
 ## 🤝 关联项目
 
-- [MoeChat-APP](../README.md) - Electron + Vue 3 桌面客户端
+- [MoeChat-APP](https://github.com/Mios-dream/Meochat-APP) - Electron + Vue 3 桌面客户端
 - [MoeChat](https://github.com/Mios-dream/MoeChat) - 项目后端
 - [Remotion](https://www.remotion.dev/) - React 视频编程框架
 
